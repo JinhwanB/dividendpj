@@ -11,7 +11,7 @@ spring:
         format_sql: true
         show_sql: true
         highlight_sql: true
-          
+
   datasource:
     username: sa
     password:
@@ -33,3 +33,6 @@ logging:
     org:
       hibernate:
         SQL: debug
+        type:
+          descriptor:
+            sql: trace
