@@ -1,6 +1,7 @@
 package com.jh.dividendpj.company.service;
 
 import com.jh.dividendpj.company.domain.Company;
+import com.jh.dividendpj.company.dto.AutoCompleteDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.exception.CompanyErrorCode;
 import com.jh.dividendpj.company.exception.CompanyException;
@@ -63,6 +64,18 @@ public class CompanyService {
                 .devidendList(dividendInfo)
                 .build();
         return companyRepository.save(withDividend);
+    }
+
+    /**
+     * 검색한 단어에 해당하는 회사명 중 10개를 정렬하여 조회
+     *
+     * @param request 검색할 회사명
+     * @return 조회된 회사 리스트
+     */
+    @Transactional(readOnly = true)
+    public List<Company> getAutoComplete(AutoCompleteDto.Request request) {
+        String prefix = request.getPrefix();
+        return companyRepository.findTop10ByNameLikeOrderByNameDesc(prefix);
     }
 
     /**
