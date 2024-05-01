@@ -22,7 +22,7 @@ public class Company {
     @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST)
     private List<Devidend> devidendList;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
