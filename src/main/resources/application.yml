@@ -1,4 +1,35 @@
 spring:
   application:
     name: dividendpj
-  
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database: h2
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        highlight_sql: true
+          
+  datasource:
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:dividenepj
+
+  data:
+    redis:
+      port: 6379
+      host: localhost
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
