@@ -1,9 +1,11 @@
 package com.jh.dividendpj.company.domain;
 
+import com.jh.dividendpj.dividend.domain.Devidend;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -16,6 +18,9 @@ public class Company {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST)
+    private List<Devidend> devidendList;
 
     @Column(nullable = false)
     private String name;
