@@ -30,7 +30,7 @@ public class YahooScraper implements ScraperInterface {
             Connection connect = Jsoup.connect(url);
             Document document = connect.get();
             Element titleEle = document.getElementsByClass("svelte-ufs8hf").get(0);
-            String title = titleEle.text().replaceAll("\\(.*\\)", "");
+            String title = titleEle.text().replaceAll("\\(.*\\)", "").trim();
 
             company = Company.builder()
                     .name(title)
