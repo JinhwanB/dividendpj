@@ -55,7 +55,7 @@ public class GlobalExceptionHandler {
     private ResponseEntity<GlobalApiResponse> handleCompanyException(CompanyException e) {
         GlobalApiResponse response = GlobalApiResponse.builder()
                 .status(e.getCompanyErrorCode().getStatus())
-                .message(e.getMessage())
+                .message(e.getCompanyErrorCode().getMessage())
                 .build();
         return ResponseEntity.ok(response);
     }
