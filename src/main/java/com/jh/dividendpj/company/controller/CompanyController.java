@@ -11,6 +11,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -68,5 +72,11 @@ public class CompanyController {
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 
-
+    // 현재 관리하고 있는 모든 회사 리스트 조회
+    @GetMapping("/company")
+    public ResponseEntity<GlobalApiResponse> getAllCompany(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<Company> allCompany = companyService.getAllCompany(pageable);
+        List<Page<Company>> list = new ArrayList<>(List.of(allCompany));
+        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
+    }
 }
