@@ -11,6 +11,8 @@ import com.jh.dividendpj.dividend.service.DividendService;
 import com.jh.dividendpj.scraper.YahooScraper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -87,5 +89,15 @@ public class CompanyService {
     @Transactional(readOnly = true)
     public Company getCompany(String companyName) {
         return companyRepository.findByName(companyName).orElseThrow(() -> new CompanyException(CompanyErrorCode.NOT_FOUND_NAME.getMessage()));
+    }
+
+    /**
+     * 현재 관리하고있는 모든 회사 리스트를 페이징하여 조회
+     *
+     * @param pageable 페이징 처리
+     * @return 페이징 처리된 모든 회사 리스트
+     */
+    public Page<Company> getAllCompany(Pageable pageable) {
+        return companyRepository.findAll(pageable);
     }
 }
