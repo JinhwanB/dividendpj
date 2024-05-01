@@ -5,7 +5,7 @@ import com.jh.dividendpj.company.dto.AutoCompleteDto;
 import com.jh.dividendpj.company.dto.CompanyWithDividendDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.service.CompanyService;
-import com.jh.dividendpj.global.GlobalApiResponse;
+import com.jh.dividendpj.config.GlobalApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -67,4 +67,6 @@ public class CompanyController {
         List<CompanyWithDividendDto.Response> list = new ArrayList<>(List.of(companyInfo.toCompanyWithDividendDto()));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
+
+
 }
