@@ -1,6 +1,6 @@
 package com.jh.dividendpj.company.domain;
 
-import com.jh.dividendpj.dividend.domain.Devidend;
+import com.jh.dividendpj.dividend.domain.Dividend;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +20,7 @@ public class Company {
     private Long id;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
-    private List<Devidend> devidendList;
+    private List<Dividend> devidendList;
 
     @Column(nullable = false, unique = true)
     private String name;
