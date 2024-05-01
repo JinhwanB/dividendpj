@@ -23,7 +23,7 @@ public class YahooScraper implements ScraperInterface {
     private static final long START_TIME = 86400;
 
     @Override
-    public Company getCompanyName(String ticker) {
+    public Company getCompany(String ticker) {
         Company company;
         try {
             String url = String.format(COMPANY_URL, ticker, ticker);
