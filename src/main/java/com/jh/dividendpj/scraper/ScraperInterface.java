@@ -6,7 +6,7 @@ import com.jh.dividendpj.dividend.domain.Dividend;
 import java.util.List;
 
 public interface ScraperInterface {
-    Company getCompanyName(String ticker);
+    Company getCompany(String ticker);
 
     List<Dividend> getDividendList(Company company);
 }
