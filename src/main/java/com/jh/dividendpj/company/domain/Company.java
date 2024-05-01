@@ -1,5 +1,6 @@
 package com.jh.dividendpj.company.domain;
 
+import com.jh.dividendpj.company.dto.AutoCompleteDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.dividend.domain.Dividend;
 import jakarta.persistence.*;
@@ -41,6 +42,14 @@ public class Company {
         return CreateCompanyDto.Response.builder()
                 .companyName(name)
                 .ticker(ticker)
+                .build();
+    }
+
+    // Company -> AutoCompleteDto.Response
+    public AutoCompleteDto.Response toAutoCompleteResponseDto() {
+        return AutoCompleteDto.Response.builder()
+                .ticker(ticker)
+                .name(name)
                 .build();
     }
 }
