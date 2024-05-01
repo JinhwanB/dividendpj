@@ -77,7 +77,7 @@ public class CompanyService {
     @Transactional(readOnly = true)
     public List<Company> getAutoComplete(AutoCompleteDto.Request request) {
         String prefix = request.getPrefix();
-        return companyRepository.findTop10ByNameLikeOrderByNameDesc(prefix);
+        return companyRepository.findTop10ByNameStartingWithIgnoreCaseOrNameContainingIgnoreCaseOrderByNameDesc(prefix, prefix);
     }
 
     /**
