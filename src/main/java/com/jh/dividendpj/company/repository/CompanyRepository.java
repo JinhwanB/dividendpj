@@ -15,5 +15,5 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
 
     Optional<Company> findByName(String name);
 
-    List<Company> findTop10ByNameLikeOrderByNameDesc(String prefix);
+    List<Company> findTop10ByNameStartingWithIgnoreCaseOrNameContainingIgnoreCaseOrderByNameDesc(String prefix1, String prefix2);
 }
