@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(toBuilder = true)
 @SQLDelete(sql = "UPDARE company SET delDate = now() WHERE ticker=?")
-@SQLRestriction("delDate = null")
+@SQLRestriction("del_date = null")
 @ToString
 public class Company {
     @Id
