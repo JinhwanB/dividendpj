@@ -5,12 +5,15 @@ import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.exception.CompanyErrorCode;
 import com.jh.dividendpj.company.exception.CompanyException;
 import com.jh.dividendpj.company.repository.CompanyRepository;
+import com.jh.dividendpj.dividend.domain.Dividend;
 import com.jh.dividendpj.dividend.service.DividendService;
 import com.jh.dividendpj.scraper.YahooScraper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -45,6 +48,21 @@ public class CompanyService {
     public void deleteCompany(String ticker) {
         Company company = companyRepository.findByTicker(ticker).orElseThrow(() -> new CompanyException(CompanyErrorCode.NOT_FOUND_TICKER.getMessage()));
         companyRepository.delete(company);
+    }
+
+    /**
+     * 회사 정보와 배당금 정보 조회
+     *
+     * @param companyName 조회할 회사 이름
+     * @return 조회된 회사 정보와 배당금 정보
+     */
+    public Company getCompanyInfo(String companyName) {
+        Company company = companyRepository.findByName(companyName).orElseThrow(() -> new CompanyException(CompanyErrorCode.NOT_FOUND_NAME.getMessage()));
+        List<Dividend> dividendInfo = dividendService.getDividendInfo(company);
+        Company withDividend = company.toBuilder()
+                .devidendList(dividendInfo)
+                .build();
+        return companyRepository.save(withDividend);
     }
 
     /**
