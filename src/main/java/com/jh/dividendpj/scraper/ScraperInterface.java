@@ -8,5 +8,5 @@ import java.util.List;
 public interface ScraperInterface {
     Company getCompanyName(String ticker);
 
-    List<Dividend> getDividendList(String ticker);
+    List<Dividend> getDividendList(Company company);
 }
