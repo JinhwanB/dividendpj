@@ -1,11 +1,14 @@
 package com.jh.dividendpj.company.exception;
 
-public class CompanyException extends RuntimeException {
-    public CompanyException() {
-        super();
-    }
+import lombok.Getter;
 
-    public CompanyException(String message) {
+@Getter
+public class CompanyException extends RuntimeException {
+    private CompanyErrorCode companyErrorCode;
+    private String message;
+
+    public CompanyException(CompanyErrorCode companyErrorCode, String message) {
         super(message);
+        this.companyErrorCode = companyErrorCode;
     }
 }
