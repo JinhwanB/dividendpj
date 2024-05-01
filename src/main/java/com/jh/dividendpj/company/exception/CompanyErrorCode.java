@@ -1,4 +1,4 @@
-package com.jh.dividendpj.dividend.exception;
+package com.jh.dividendpj.company.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
