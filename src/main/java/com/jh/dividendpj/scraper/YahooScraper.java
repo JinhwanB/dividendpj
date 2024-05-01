@@ -2,6 +2,8 @@ package com.jh.dividendpj.scraper;
 
 import com.jh.dividendpj.company.domain.Company;
 import com.jh.dividendpj.dividend.domain.Dividend;
+import com.jh.dividendpj.scraper.exception.ScraperErrorCode;
+import com.jh.dividendpj.scraper.exception.ScraperException;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -30,6 +32,9 @@ public class YahooScraper implements ScraperInterface {
             Connection connect = Jsoup.connect(url);
             Document document = connect.get();
             Element titleEle = document.getElementsByClass("svelte-ufs8hf").get(0);
+            if (titleEle == null) {
+                throw new ScraperException(ScraperErrorCode.NOT_FOUND_TICKER, ScraperErrorCode.NOT_FOUND_TICKER.getMessage());
+            }
             String title = titleEle.text().replaceAll("\\(.*\\)", "").trim();
 
             company = Company.builder()
@@ -56,19 +61,20 @@ public class YahooScraper implements ScraperInterface {
             Element element = elements.get(0);
 
             Element tbody = element.children().get(1);
+            int found = 0;
             for (Element child : tbody.children()) {
                 String text = child.text();
                 if (!text.endsWith("Dividend")) {
                     continue;
                 }
-
+                found++;
                 String[] split = text.split(" ");
                 int month = Month.stringToMonth(split[0]);
                 int day = Integer.parseInt(split[1].replace(",", ""));
                 int year = Integer.parseInt(split[2]);
                 String dividend = split[3];
                 if (month == -1) {
-                    throw new RuntimeException("Month enum에서 해당하는 month를 찾을 수 없습니다. : " + split[0]);
+                    throw new ScraperException(ScraperErrorCode.NOT_FOUND_MONTH, ScraperErrorCode.NOT_FOUND_MONTH.getMessage());
                 }
 
                 Dividend dividendBuild = Dividend.builder()
@@ -77,6 +83,10 @@ public class YahooScraper implements ScraperInterface {
                         .company(company)
                         .build();
                 list.add(dividendBuild);
+            }
+
+            if (found == 0) {
+                throw new ScraperException(ScraperErrorCode.NOT_FOUND_DIVIDEND, ScraperErrorCode.NOT_FOUND_DIVIDEND.getMessage());
             }
         } catch (IOException e) {
             log.error("스크랩을 통해 배당금 정보 가져오기 실패!! = {}", e.getMessage());
