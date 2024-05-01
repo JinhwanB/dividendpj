@@ -1,6 +1,7 @@
 package com.jh.dividendpj.dividend.domain;
 
 import com.jh.dividendpj.company.domain.Company;
+import com.jh.dividendpj.dividend.dto.JoinDividendDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
@@ -32,4 +33,12 @@ public class Dividend {
 
     @Column
     private LocalDateTime delDate;
+
+    // Dividend -> JoinDividendDto.Response
+    public JoinDividendDto.Response toJoinDividendDto() {
+        return JoinDividendDto.Response.builder()
+                .dividend(dividend)
+                .date(date)
+                .build();
+    }
 }
