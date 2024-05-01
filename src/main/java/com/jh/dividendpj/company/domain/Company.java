@@ -1,5 +1,6 @@
 package com.jh.dividendpj.company.domain;
 
+import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.dividend.domain.Dividend;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,4 +35,12 @@ public class Company {
 
     @Column
     private LocalDateTime delDate;
+
+    // Company -> CreateCompanyDto.Response
+    public CreateCompanyDto.Response toCreateResponseDto() {
+        return CreateCompanyDto.Response.builder()
+                .companyName(name)
+                .ticker(ticker)
+                .build();
+    }
 }
