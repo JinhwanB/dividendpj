@@ -15,8 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(toBuilder = true)
-@SQLDelete(sql = "UPDARE company SET delDate = now() WHERE ticker=?")
-@SQLRestriction("del_date = null")
+@SQLDelete(sql = "UPDATE company SET del_date = now() WHERE id=?")
+@SQLRestriction("del_date IS NULL")
 @ToString
 public class Company {
     @Id
@@ -26,7 +26,7 @@ public class Company {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<Dividend> devidendList;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
