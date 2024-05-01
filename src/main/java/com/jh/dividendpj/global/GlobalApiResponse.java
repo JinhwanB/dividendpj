@@ -13,10 +13,10 @@ import java.util.List;
 public class GlobalApiResponse {
     private int status;
     private String message;
-    private List<Object> result;
+    private List<?> result;
 
     // api 응답 성공 시 apiResponse로 반환 메소드
-    public static GlobalApiResponse toGlobalApiResponse(List<Object> dtoList) {
+    public static GlobalApiResponse toGlobalApiResponse(List<?> dtoList) {
         return GlobalApiResponse.builder()
                 .message("성공")
                 .status(200)
