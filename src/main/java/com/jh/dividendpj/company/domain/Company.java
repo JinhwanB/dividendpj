@@ -19,7 +19,7 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL)
     private List<Devidend> devidendList;
 
     @Column(nullable = false, unique = true)
