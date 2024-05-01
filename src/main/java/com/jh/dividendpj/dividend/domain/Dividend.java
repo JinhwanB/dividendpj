@@ -27,4 +27,7 @@ public class Dividend {
 
     @Column(nullable = false)
     private String dividend;
+
+    @Column
+    private LocalDateTime delDate;
 }
