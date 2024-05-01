@@ -1,6 +1,7 @@
 package com.jh.dividendpj.company.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 public class CreateCompanyDto {
@@ -12,6 +13,7 @@ public class CreateCompanyDto {
     @ToString
     public static class Request {
         @NotBlank(message = "검색할 단어를 입력해주세요.")
+        @Size(min = 1)
         private String ticker;
     }
 
