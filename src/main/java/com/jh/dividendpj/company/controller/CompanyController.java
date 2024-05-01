@@ -1,6 +1,7 @@
 package com.jh.dividendpj.company.controller;
 
 import com.jh.dividendpj.company.domain.Company;
+import com.jh.dividendpj.company.dto.AutoCompleteDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.service.CompanyService;
 import com.jh.dividendpj.global.GlobalApiResponse;
@@ -26,7 +27,7 @@ public class CompanyController {
 
     // 회사 생성
     @PostMapping
-    public ResponseEntity<GlobalApiResponse> test(@Valid @RequestBody CreateCompanyDto.Request request) {
+    public ResponseEntity<GlobalApiResponse> create(@Valid @RequestBody CreateCompanyDto.Request request) {
         log.info("입력받은 ticker={}", request.getTicker());
 
         Company company = companyService.createCompany(request);
@@ -36,13 +37,25 @@ public class CompanyController {
 
     // 회사 삭제
     @DeleteMapping("/{ticker}")
-    public ResponseEntity<GlobalApiResponse> testDelete(@PathVariable @NotBlank(message = "삭제할 ticker를 입력해주세요.") @Size(min = 1, message = "ticker는 최소 1글자 이상입니다.") String ticker) {
+    public ResponseEntity<GlobalApiResponse> delete(@PathVariable @NotBlank(message = "삭제할 ticker를 입력해주세요.") @Size(min = 1, message = "ticker는 최소 1글자 이상입니다.") String ticker) {
+        log.info("삭제할 ticker={}", ticker);
+
         companyService.deleteCompany(ticker);
         GlobalApiResponse response = GlobalApiResponse.builder()
                 .message("성공")
                 .status(200)
                 .build();
         return ResponseEntity.ok(response);
+    }
+
+    // 자동완성 기능을 위한 API
+    @GetMapping("/autocomplete")
+    public ResponseEntity<GlobalApiResponse> autoComplete(@Valid @RequestBody AutoCompleteDto.Request request) {
+        log.info("검색한 단어={}", request.getPrefix());
+
+        List<Company> autoComplete = companyService.getAutoComplete(request);
+        List<AutoCompleteDto.Response> list = autoComplete.stream().map(Company::toAutoCompleteResponseDto).toList();
+        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 
     @GetMapping("/company")
