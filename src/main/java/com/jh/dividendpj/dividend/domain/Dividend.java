@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(toBuilder = true)
 @ToString
-public class Devidend {
+public class Dividend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
