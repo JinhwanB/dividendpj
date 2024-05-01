@@ -19,6 +19,12 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
     private final YahooScraper yahooScraper;
 
+    /**
+     * 회사 정보 생성
+     *
+     * @param request 회사의 ticker
+     * @return 생성된 회사 정보
+     */
     public Company createCompany(CreateCompanyDto.Request request) {
         String ticker = request.getTicker();
         Company company = companyRepository.findByTickerAndDelDate(ticker, null).orElse(null);
