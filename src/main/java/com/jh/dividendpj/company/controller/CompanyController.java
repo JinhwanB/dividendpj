@@ -2,6 +2,7 @@ package com.jh.dividendpj.company.controller;
 
 import com.jh.dividendpj.company.domain.Company;
 import com.jh.dividendpj.company.dto.AutoCompleteDto;
+import com.jh.dividendpj.company.dto.CompanyWithDividendDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.service.CompanyService;
 import com.jh.dividendpj.global.GlobalApiResponse;
@@ -18,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/company")
 @RequiredArgsConstructor
 @Slf4j
 @Validated
@@ -26,7 +26,7 @@ public class CompanyController {
     private final CompanyService companyService;
 
     // 회사 생성
-    @PostMapping
+    @PostMapping("/company")
     public ResponseEntity<GlobalApiResponse> create(@Valid @RequestBody CreateCompanyDto.Request request) {
         log.info("입력받은 ticker={}", request.getTicker());
 
@@ -36,7 +36,7 @@ public class CompanyController {
     }
 
     // 회사 삭제
-    @DeleteMapping("/{ticker}")
+    @DeleteMapping("/company/{ticker}")
     public ResponseEntity<GlobalApiResponse> delete(@PathVariable @NotBlank(message = "삭제할 ticker를 입력해주세요.") @Size(min = 1, message = "ticker는 최소 1글자 이상입니다.") String ticker) {
         log.info("삭제할 ticker={}", ticker);
 
@@ -49,7 +49,7 @@ public class CompanyController {
     }
 
     // 자동완성 기능을 위한 API
-    @GetMapping("/autocomplete")
+    @GetMapping("/company/autocomplete")
     public ResponseEntity<GlobalApiResponse> autoComplete(@Valid @RequestBody AutoCompleteDto.Request request) {
         log.info("검색한 단어={}", request.getPrefix());
 
@@ -58,8 +58,13 @@ public class CompanyController {
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 
-    @GetMapping("/company")
-    public Company testGet(@RequestParam String companyName) {
-        return companyService.getCompany(companyName);
+    // 회사 정보와 배당금 정보 조회 컨트롤러
+    @GetMapping("/finance/dividend/{companyName}")
+    public ResponseEntity<GlobalApiResponse> getCompanyWithDividend(@PathVariable @NotBlank(message = "회사 이름을 입력해주세요.") @Size(min = 1, message = "회사 이름은 최소 1글자 이상입니다.") String companyName) {
+        log.info("조회할 회사명={}", companyName);
+
+        Company companyInfo = companyService.getCompanyInfo(companyName);
+        List<CompanyWithDividendDto.Response> list = new ArrayList<>(List.of(companyInfo.toCompanyWithDividendDto()));
+        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 }
