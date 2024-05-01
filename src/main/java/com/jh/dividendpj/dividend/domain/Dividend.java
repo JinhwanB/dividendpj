@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(toBuilder = true)
 @ToString
-@SQLRestriction("del_date = null")
+@SQLRestriction("del_date IS NULL")
 public class Dividend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
