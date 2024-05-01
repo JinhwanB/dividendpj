@@ -3,6 +3,7 @@ package com.jh.dividendpj.dividend.domain;
 import com.jh.dividendpj.company.domain.Company;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(toBuilder = true)
 @ToString
+@SQLRestriction("delDate = null")
 public class Dividend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
