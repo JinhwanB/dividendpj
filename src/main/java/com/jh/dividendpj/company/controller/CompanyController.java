@@ -12,6 +12,7 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -76,7 +77,9 @@ public class CompanyController {
     @GetMapping("/company")
     public ResponseEntity<GlobalApiResponse> getAllCompany(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Company> allCompany = companyService.getAllCompany(pageable);
-        List<Page<Company>> list = new ArrayList<>(List.of(allCompany));
+        List<AutoCompleteDto.Response> pageList = allCompany.stream().map(Company::toAutoCompleteResponseDto).toList();
+        Page<AutoCompleteDto.Response> allPageList = new PageImpl<>(pageList, pageable, pageList.size());
+        List<Page<AutoCompleteDto.Response>> list = new ArrayList<>(List.of(allPageList));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 }
