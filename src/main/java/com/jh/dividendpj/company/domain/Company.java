@@ -3,6 +3,8 @@ package com.jh.dividendpj.company.domain;
 import com.jh.dividendpj.dividend.domain.Dividend;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(toBuilder = true)
+@SQLDelete(sql = "UPDARE company SET delDate = now() WHERE ticker=?")
+@SQLRestriction("delDate = null")
 @ToString
 public class Company {
     @Id
