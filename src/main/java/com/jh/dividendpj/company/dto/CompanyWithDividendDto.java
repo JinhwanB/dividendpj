@@ -15,6 +15,6 @@ public class CompanyWithDividendDto {
     public static class Response {
         private String name;
         private String ticker;
-        private List<JoinDividendDto> dividendDtoList;
+        private List<JoinDividendDto.Response> dividendDtoList;
     }
 }
