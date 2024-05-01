@@ -21,7 +21,7 @@ public class DividendService {
     private final YahooScraper yahooScraper;
     private final CompanyService companyService;
 
-    public List<Dividend> getDividendInfo(String companyName) {
+    private List<Dividend> getDividendInfo(String companyName) {
         Company company = companyService.getCompany(companyName);
         return yahooScraper.getDividendList(company);
     }
