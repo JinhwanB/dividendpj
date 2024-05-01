@@ -21,4 +21,13 @@ public enum Month {
 
     private String month;
     private int monthToNumber;
+
+    public static int stringToMonth(String str) {
+        for (Month value : Month.values()) {
+            if (str.equals(value.month)) {
+                return value.monthToNumber;
+            }
+        }
+        return -1;
+    }
 }
