@@ -1,9 +1,6 @@
 package com.jh.dividendpj.company.dto;
 
-import com.jh.dividendpj.dividend.dto.JoinDividendDto;
 import lombok.*;
-
-import java.util.List;
 
 public class CreateCompanyDto {
     @Getter
@@ -25,6 +22,5 @@ public class CreateCompanyDto {
     public static class Response {
         private String companyName;
         private String ticker;
-        private List<JoinDividendDto> dividendDtoList;
     }
 }
