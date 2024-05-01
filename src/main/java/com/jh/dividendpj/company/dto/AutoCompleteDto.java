@@ -16,4 +16,15 @@ public class AutoCompleteDto {
         @Size(min = 1)
         private String prefix;
     }
+
+    @Getter
+    @Setter // 테스트용
+    @AllArgsConstructor
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @Builder(toBuilder = true)
+    @ToString
+    public static class Response {
+        private String name;
+        private String ticker;
+    }
 }
