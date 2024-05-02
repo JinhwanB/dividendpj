@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.jh.dividendpj.company.dto.AutoCompleteDto;
+import com.jh.dividendpj.company.dto.CompanyDto;
 import com.jh.dividendpj.company.dto.CompanyWithDividendDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.dividend.domain.Dividend;
@@ -53,8 +53,8 @@ public class Company {
     }
 
     // Company -> AutoCompleteDto.Response
-    public AutoCompleteDto.Response toAutoCompleteResponseDto() {
-        return AutoCompleteDto.Response.builder()
+    public CompanyDto.Response toAutoCompleteResponseDto() {
+        return CompanyDto.Response.builder()
                 .ticker(ticker)
                 .name(name)
                 .build();
