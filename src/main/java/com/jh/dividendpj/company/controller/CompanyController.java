@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,18 +43,16 @@ public class CompanyController {
 
     // 회사 삭제
     @DeleteMapping("/company/{ticker}")
-    public ResponseEntity<GlobalApiResponse> delete(@PathVariable String ticker) {
+    public ResponseEntity<GlobalApiResponse> delete(@PathVariable Optional<String> ticker) {
         log.info("삭제할 ticker={}", ticker);
 
-        if (ticker.isEmpty()) {
-            throw new IllegalArgumentException("삭제할 ticker를 입력해주세요.");
-        }
+        String notEmptyTicker = ticker.orElseThrow(() -> new IllegalArgumentException("삭제할 ticker를 입력해주세요."));
 
-        if (ticker.startsWith(" ")) {
+        if (notEmptyTicker.startsWith(" ")) {
             throw new IllegalArgumentException("ticker의 단어 시작에 공백이 포함되어 있습니다.");
         }
 
-        companyService.deleteCompany(ticker);
+        companyService.deleteCompany(notEmptyTicker);
         GlobalApiResponse response = GlobalApiResponse.builder()
                 .message("성공")
                 .status(200)
