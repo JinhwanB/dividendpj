@@ -1,7 +1,7 @@
 package com.jh.dividendpj.company.controller;
 
 import com.jh.dividendpj.company.domain.Company;
-import com.jh.dividendpj.company.dto.AutoCompleteDto;
+import com.jh.dividendpj.company.dto.CompanyDto;
 import com.jh.dividendpj.company.dto.CompanyWithDividendDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.service.CompanyService;
@@ -60,11 +60,11 @@ public class CompanyController {
 
     // 자동완성 기능을 위한 API
     @GetMapping("/company/autocomplete")
-    public ResponseEntity<GlobalApiResponse> autoComplete(@Valid @RequestBody AutoCompleteDto.Request request) {
+    public ResponseEntity<GlobalApiResponse> autoComplete(@Valid @RequestBody CompanyDto.Request request) {
         log.info("검색한 단어={}", request.getPrefix());
 
         List<Company> autoComplete = companyService.getAutoComplete(request);
-        List<AutoCompleteDto.Response> list = autoComplete.stream().map(Company::toAutoCompleteResponseDto).toList();
+        List<CompanyDto.Response> list = autoComplete.stream().map(Company::toAutoCompleteResponseDto).toList();
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 
@@ -88,9 +88,9 @@ public class CompanyController {
     @GetMapping("/company")
     public ResponseEntity<GlobalApiResponse> getAllCompany(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Company> allCompany = companyService.getAllCompany(pageable);
-        List<AutoCompleteDto.Response> pageList = allCompany.stream().map(Company::toAutoCompleteResponseDto).toList();
-        Page<AutoCompleteDto.Response> allPageList = new PageImpl<>(pageList, pageable, pageList.size());
-        List<Page<AutoCompleteDto.Response>> list = new ArrayList<>(List.of(allPageList));
+        List<CompanyDto.Response> pageList = allCompany.stream().map(Company::toAutoCompleteResponseDto).toList();
+        Page<CompanyDto.Response> allPageList = new PageImpl<>(pageList, pageable, pageList.size());
+        List<Page<CompanyDto.Response>> list = new ArrayList<>(List.of(allPageList));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 }
