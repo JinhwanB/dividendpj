@@ -1,7 +1,8 @@
 package com.jh.dividendpj.company.service;
 
 import com.jh.dividendpj.company.domain.Company;
-import com.jh.dividendpj.company.dto.AutoCompleteDto;
+import com.jh.dividendpj.company.dto.CompanyDto;
+import com.jh.dividendpj.company.dto.CompanyWithDividendDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.exception.CompanyErrorCode;
 import com.jh.dividendpj.company.exception.CompanyException;
@@ -11,7 +12,9 @@ import com.jh.dividendpj.dividend.service.DividendService;
 import com.jh.dividendpj.scraper.YahooScraper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,14 +36,15 @@ public class CompanyService {
      * @param request 회사의 ticker
      * @return 생성된 회사 정보
      */
-    public Company createCompany(CreateCompanyDto.Request request) {
+    public CreateCompanyDto.Response createCompany(CreateCompanyDto.Request request) {
         String ticker = request.getTicker();
         Company company = companyRepository.findByTicker(ticker).orElse(null);
         if (company != null) {
             throw new CompanyException(CompanyErrorCode.ALREADY_EXIST_COMPANY, CompanyErrorCode.ALREADY_EXIST_COMPANY.getMessage());
         }
         company = yahooScraper.getCompany(ticker);
-        return companyRepository.save(company);
+        Company save = companyRepository.save(company);
+        return save.toCreateResponseDto();
     }
 
     /**
@@ -59,13 +63,15 @@ public class CompanyService {
      * @param companyName 조회할 회사 이름
      * @return 조회된 회사 정보와 배당금 정보
      */
-    public Company getCompanyInfo(String companyName) {
+    @Cacheable(key = "#companyName", value = "finance")
+    public CompanyWithDividendDto.Response getCompanyInfo(String companyName) {
         Company company = companyRepository.findByName(companyName).orElseThrow(() -> new CompanyException(CompanyErrorCode.NOT_FOUND_NAME, CompanyErrorCode.NOT_FOUND_NAME.getMessage()));
         List<Dividend> dividendInfo = dividendService.getDividendInfo(company);
         Company withDividend = company.toBuilder()
                 .devidendList(dividendInfo)
                 .build();
-        return companyRepository.save(withDividend);
+        Company save = companyRepository.save(withDividend);
+        return save.toCompanyWithDividendDto();
     }
 
     /**
@@ -75,9 +81,10 @@ public class CompanyService {
      * @return 조회된 회사 리스트
      */
     @Transactional(readOnly = true)
-    public List<Company> getAutoComplete(AutoCompleteDto.Request request) {
+    public List<CompanyDto.Response> getAutoComplete(CompanyDto.Request request) {
         String prefix = request.getPrefix();
-        return companyRepository.findTop10ByNameStartingWithIgnoreCaseOrNameContainingIgnoreCaseOrderByNameDesc(prefix, prefix);
+        return companyRepository.findTop10ByNameStartingWithIgnoreCaseOrNameContainingIgnoreCaseOrderByNameDesc(prefix, prefix)
+                .stream().map(Company::toCompanyResponseDto).toList();
     }
 
     /**
@@ -87,7 +94,11 @@ public class CompanyService {
      * @return 페이징 처리된 모든 회사 리스트
      */
     @Transactional(readOnly = true)
-    public Page<Company> getAllCompany(Pageable pageable) {
-        return companyRepository.findAll(pageable);
+    public Page<CompanyDto.Response> getAllCompany(Pageable pageable) {
+        Page<Company> all = companyRepository.findAll(pageable);
+        List<CompanyDto.Response> list = all.getContent().stream()
+                .map(Company::toCompanyResponseDto)
+                .toList();
+        return new PageImpl<>(list, pageable, list.size());
     }
 }
