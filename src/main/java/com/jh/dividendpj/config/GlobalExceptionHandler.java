@@ -52,6 +52,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok(list);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    private ResponseEntity<GlobalApiResponse> handleArgumentException(IllegalArgumentException e) {
+        log.error("pathVariable 유효성 검사 실패");
+
+        GlobalApiResponse response = GlobalApiResponse.builder()
+                .message(e.getMessage())
+                .status(400)
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
     @ExceptionHandler(CompanyException.class)
     private ResponseEntity<GlobalApiResponse> handleCompanyException(CompanyException e) {
         GlobalApiResponse response = GlobalApiResponse.builder()
