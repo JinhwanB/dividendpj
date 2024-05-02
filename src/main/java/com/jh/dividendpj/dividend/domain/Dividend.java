@@ -16,6 +16,11 @@ import java.time.LocalDateTime;
 @Builder(toBuilder = true)
 @ToString
 @SQLRestriction("del_date IS NULL")
+@Table(
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {"company_id", "date"}
+        )
+)
 public class Dividend {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
