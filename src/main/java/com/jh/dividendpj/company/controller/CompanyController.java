@@ -64,7 +64,7 @@ public class CompanyController {
         log.info("검색한 단어={}", request.getPrefix());
 
         List<Company> autoComplete = companyService.getAutoComplete(request);
-        List<CompanyDto.Response> list = autoComplete.stream().map(Company::toAutoCompleteResponseDto).toList();
+        List<CompanyDto.Response> list = autoComplete.stream().map(Company::toCompanyResponseDto).toList();
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 
@@ -88,7 +88,7 @@ public class CompanyController {
     @GetMapping("/company")
     public ResponseEntity<GlobalApiResponse> getAllCompany(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<Company> allCompany = companyService.getAllCompany(pageable);
-        List<CompanyDto.Response> pageList = allCompany.stream().map(Company::toAutoCompleteResponseDto).toList();
+        List<CompanyDto.Response> pageList = allCompany.stream().map(Company::toCompanyResponseDto).toList();
         Page<CompanyDto.Response> allPageList = new PageImpl<>(pageList, pageable, pageList.size());
         List<Page<CompanyDto.Response>> list = new ArrayList<>(List.of(allPageList));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
