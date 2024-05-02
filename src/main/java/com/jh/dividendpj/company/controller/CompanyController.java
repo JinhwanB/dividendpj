@@ -42,8 +42,16 @@ public class CompanyController {
 
     // 회사 삭제
     @DeleteMapping("/company/{ticker}")
-    public ResponseEntity<GlobalApiResponse> delete(@PathVariable @NotBlank(message = "삭제할 ticker를 입력해주세요.") @Size(min = 1, message = "ticker는 최소 1글자 이상입니다.") String ticker) {
+    public ResponseEntity<GlobalApiResponse> delete(@PathVariable String ticker) {
         log.info("삭제할 ticker={}", ticker);
+
+        if (ticker.isEmpty()) {
+            throw new IllegalArgumentException("삭제할 ticker를 입력해주세요.");
+        }
+
+        if (ticker.startsWith(" ")) {
+            throw new IllegalArgumentException("ticker의 단어 시작에 공백이 포함되어 있습니다.");
+        }
 
         companyService.deleteCompany(ticker);
         GlobalApiResponse response = GlobalApiResponse.builder()
