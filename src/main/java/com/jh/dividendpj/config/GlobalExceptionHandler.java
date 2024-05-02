@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -51,17 +50,6 @@ public class GlobalExceptionHandler {
         }
 
         return ResponseEntity.ok(list);
-    }
-
-    @ExceptionHandler(MissingPathVariableException.class)
-    private ResponseEntity<GlobalApiResponse> handleArgumentPathException(MissingPathVariableException e) {
-        log.error("pathVariable 유효성 검사 실패");
-
-        GlobalApiResponse response = GlobalApiResponse.builder()
-                .status(404)
-                .message(e.getMessage())
-                .build();
-        return ResponseEntity.ok(response);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
