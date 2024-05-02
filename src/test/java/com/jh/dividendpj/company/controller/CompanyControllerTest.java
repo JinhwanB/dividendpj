@@ -1,7 +1,7 @@
 package com.jh.dividendpj.company.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jh.dividendpj.company.dto.AutoCompleteDto;
+import com.jh.dividendpj.company.dto.CompanyDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.exception.CompanyErrorCode;
 import com.jh.dividendpj.company.service.CompanyService;
@@ -35,14 +35,14 @@ class CompanyControllerTest {
     String ticker = "coke";
 
     CreateCompanyDto.Request createRequest;
-    AutoCompleteDto.Request autoCompleteRequest;
+    CompanyDto.Request autoCompleteRequest;
 
     @BeforeEach
     void before() {
         createRequest = CreateCompanyDto.Request.builder()
                 .ticker(ticker)
                 .build();
-        autoCompleteRequest = AutoCompleteDto.Request.builder()
+        autoCompleteRequest = CompanyDto.Request.builder()
                 .prefix("c")
                 .build();
     }
