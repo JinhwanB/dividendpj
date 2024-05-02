@@ -42,7 +42,7 @@ public class CompanyController {
     }
 
     // 회사 삭제
-    @DeleteMapping("/company/{ticker}")
+    @DeleteMapping(value = {"/company/", "/company/{ticker}"})
     public ResponseEntity<GlobalApiResponse> delete(@PathVariable Optional<String> ticker) {
         log.info("삭제할 ticker={}", ticker);
 
