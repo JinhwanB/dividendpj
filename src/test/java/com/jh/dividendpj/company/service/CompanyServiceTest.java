@@ -1,7 +1,7 @@
 package com.jh.dividendpj.company.service;
 
 import com.jh.dividendpj.company.domain.Company;
-import com.jh.dividendpj.company.dto.AutoCompleteDto;
+import com.jh.dividendpj.company.dto.CompanyDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.exception.CompanyErrorCode;
 import com.jh.dividendpj.company.exception.CompanyException;
@@ -35,7 +35,7 @@ class CompanyServiceTest {
     String ticker;
     CreateCompanyDto.Request createRequest;
     String companyName;
-    AutoCompleteDto.Request autoCompleteRequest;
+    CompanyDto.Request autoCompleteRequest;
     Pageable pageable = PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "name"));
 
     @BeforeEach
@@ -47,7 +47,7 @@ class CompanyServiceTest {
                 .ticker("coke")
                 .build();
 
-        autoCompleteRequest = AutoCompleteDto.Request.builder()
+        autoCompleteRequest = CompanyDto.Request.builder()
                 .prefix("c")
                 .build();
     }
