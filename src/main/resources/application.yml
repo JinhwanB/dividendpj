@@ -39,4 +39,4 @@ logging:
 
 scheduler:
   scrap:
-    yahoo: "0/5 * * * * *"
+    yahoo: "0 0 0 * * *"
