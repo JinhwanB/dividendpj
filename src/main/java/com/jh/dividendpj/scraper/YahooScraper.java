@@ -63,13 +63,11 @@ public class YahooScraper implements ScraperInterface {
             Element element = elements.get(0);
 
             Element tbody = element.children().get(1);
-            int found = 0;
             for (Element child : tbody.children()) {
                 String text = child.text();
                 if (!text.endsWith("Dividend")) {
                     continue;
                 }
-                found++;
                 String[] split = text.split(" ");
                 int month = Month.stringToMonth(split[0]);
                 int day = Integer.parseInt(split[1].replace(",", ""));
@@ -85,10 +83,6 @@ public class YahooScraper implements ScraperInterface {
                         .company(company)
                         .build();
                 list.add(dividendBuild);
-            }
-
-            if (found == 0) {
-                throw new ScraperException(ScraperErrorCode.NOT_FOUND_DIVIDEND, ScraperErrorCode.NOT_FOUND_DIVIDEND.getMessage());
             }
         } catch (IOException e) {
             log.error("스크랩을 통해 배당금 정보 가져오기 실패!! = {}", e.getMessage());
