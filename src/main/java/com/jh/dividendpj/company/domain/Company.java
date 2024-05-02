@@ -53,7 +53,7 @@ public class Company {
     }
 
     // Company -> AutoCompleteDto.Response
-    public CompanyDto.Response toAutoCompleteResponseDto() {
+    public CompanyDto.Response toCompanyResponseDto() {
         return CompanyDto.Response.builder()
                 .ticker(ticker)
                 .name(name)
