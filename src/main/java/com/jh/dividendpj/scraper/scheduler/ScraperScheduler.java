@@ -20,7 +20,7 @@ public class ScraperScheduler {
     private final DividendRepository dividendRepository;
     private final YahooScraper yahooScraper;
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "${scheduler.scrap.yahoo}")
     public void yahooScraperSchedule() {
         log.info("스크래핑 스케줄 시작");
         List<Company> companyList = companyRepository.findAll();
