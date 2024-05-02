@@ -12,8 +12,8 @@ public class CreateCompanyDto {
     @Builder(toBuilder = true)
     @ToString
     public static class Request {
-        @NotBlank(message = "검색할 단어를 입력해주세요.")
-        @Size(min = 1)
+        @NotBlank(message = "ticker를 입력해주세요.")
+        @Size(min = 1, message = "ticker는 최소 1글자 이상이어야 합니다.")
         private String ticker;
     }
 
