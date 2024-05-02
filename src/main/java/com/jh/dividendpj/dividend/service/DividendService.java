@@ -2,7 +2,7 @@ package com.jh.dividendpj.dividend.service;
 
 import com.jh.dividendpj.company.domain.Company;
 import com.jh.dividendpj.dividend.domain.Dividend;
-import com.jh.dividendpj.dividend.repository.DividendRepository;
+import com.jh.dividendpj.dividend.dto.JoinDividendDto;
 import com.jh.dividendpj.scraper.YahooScraper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,10 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class DividendService {
-    private final DividendRepository dividendRepository;
     private final YahooScraper yahooScraper;
 
-    public List<Dividend> getDividendInfo(Company company) {
-        return yahooScraper.getDividendList(company);
+    public List<JoinDividendDto.Response> getDividendInfo(Company company) {
+        return yahooScraper.getDividendList(company).stream().map(Dividend::toJoinDividendDto).toList();
     }
 }
