@@ -1,6 +1,7 @@
 package com.jh.dividendpj.config;
 
 import com.jh.dividendpj.company.exception.CompanyException;
+import com.jh.dividendpj.scraper.exception.ScraperException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +57,24 @@ public class GlobalExceptionHandler {
         GlobalApiResponse response = GlobalApiResponse.builder()
                 .status(e.getCompanyErrorCode().getStatus())
                 .message(e.getCompanyErrorCode().getMessage())
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(ScraperException.class)
+    private ResponseEntity<GlobalApiResponse> handleScraperException(ScraperException e) {
+        GlobalApiResponse response = GlobalApiResponse.builder()
+                .status(e.getScraperErrorCode().getStatus())
+                .message(e.getScraperErrorCode().getMessage())
+                .build();
+        return ResponseEntity.ok(response);
+    }
+
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<GlobalApiResponse> handleNotExpectedException(Exception e) {
+        GlobalApiResponse response = GlobalApiResponse.builder()
+                .status(500)
+                .message("예상치 못한 문제가 발생했습니다. 서버에 문의해주세요.")
                 .build();
         return ResponseEntity.ok(response);
     }
