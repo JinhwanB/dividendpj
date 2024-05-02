@@ -19,7 +19,7 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class YahooScraper implements ScraperInterface {
+public class YahooScraper implements ScraperInterface<Company, Dividend> {
     private static final String DIVIDEND_URL = "https://finance.yahoo.com/quote/%s/history?period1=%d&period2=%d&frequency=1mo";
     private static final String COMPANY_URL = "https://finance.yahoo.com/quote/%s/p=%s";
     private static final long START_TIME = 86400;
