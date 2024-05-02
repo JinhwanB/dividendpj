@@ -11,8 +11,6 @@ import java.util.Optional;
 public interface CompanyRepository extends JpaRepository<Company, Long> {
     Optional<Company> findByTicker(String ticker);
 
-    List<Company> findAllByTicker(String ticker);
-
     Optional<Company> findByName(String name);
 
     List<Company> findTop10ByNameStartingWithIgnoreCaseOrNameContainingIgnoreCaseOrderByNameDesc(String prefix1, String prefix2);
