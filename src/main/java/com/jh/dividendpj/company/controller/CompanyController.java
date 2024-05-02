@@ -1,6 +1,5 @@
 package com.jh.dividendpj.company.controller;
 
-import com.jh.dividendpj.company.domain.Company;
 import com.jh.dividendpj.company.dto.CompanyDto;
 import com.jh.dividendpj.company.dto.CompanyWithDividendDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
@@ -10,7 +9,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -34,8 +32,8 @@ public class CompanyController {
     public ResponseEntity<GlobalApiResponse> create(@Valid @RequestBody CreateCompanyDto.Request request) {
         log.info("입력받은 ticker={}", request.getTicker());
 
-        Company company = companyService.createCompany(request);
-        List<CreateCompanyDto.Response> list = new ArrayList<>(List.of(company.toCreateResponseDto()));
+        CreateCompanyDto.Response company = companyService.createCompany(request);
+        List<CreateCompanyDto.Response> list = new ArrayList<>(List.of(company));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 
@@ -63,9 +61,8 @@ public class CompanyController {
     public ResponseEntity<GlobalApiResponse> autoComplete(@Valid @RequestBody CompanyDto.Request request) {
         log.info("검색한 단어={}", request.getPrefix());
 
-        List<Company> autoComplete = companyService.getAutoComplete(request);
-        List<CompanyDto.Response> list = autoComplete.stream().map(Company::toCompanyResponseDto).toList();
-        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
+        List<CompanyDto.Response> autoComplete = companyService.getAutoComplete(request);
+        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(autoComplete));
     }
 
     // 회사 정보와 배당금 정보 조회 컨트롤러
@@ -79,18 +76,16 @@ public class CompanyController {
             throw new IllegalArgumentException("companyName의 단어 시작에 공백이 포함되어 있습니다.");
         }
 
-        Company companyInfo = companyService.getCompanyInfo(notEmptyCompanyName);
-        List<CompanyWithDividendDto.Response> list = new ArrayList<>(List.of(companyInfo.toCompanyWithDividendDto()));
+        CompanyWithDividendDto.Response companyInfo = companyService.getCompanyInfo(notEmptyCompanyName);
+        List<CompanyWithDividendDto.Response> list = new ArrayList<>(List.of(companyInfo));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 
     // 현재 관리하고 있는 모든 회사 리스트 조회
     @GetMapping("/company")
     public ResponseEntity<GlobalApiResponse> getAllCompany(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<Company> allCompany = companyService.getAllCompany(pageable);
-        List<CompanyDto.Response> pageList = allCompany.stream().map(Company::toCompanyResponseDto).toList();
-        Page<CompanyDto.Response> allPageList = new PageImpl<>(pageList, pageable, pageList.size());
-        List<Page<CompanyDto.Response>> list = new ArrayList<>(List.of(allPageList));
+        Page<CompanyDto.Response> allCompany = companyService.getAllCompany(pageable);
+        List<Page<CompanyDto.Response>> list = new ArrayList<>(List.of(allCompany));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
 }
