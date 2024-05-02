@@ -81,12 +81,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok(response);
     }
 
-    @ExceptionHandler(Exception.class)
-    private ResponseEntity<GlobalApiResponse> handleNotExpectedException(Exception e) {
-        GlobalApiResponse response = GlobalApiResponse.builder()
-                .status(500)
-                .message("예상치 못한 문제가 발생했습니다. 서버에 문의해주세요.")
-                .build();
-        return ResponseEntity.ok(response);
-    }
+//    @ExceptionHandler(Exception.class)
+//    private ResponseEntity<GlobalApiResponse> handleNotExpectedException(Exception e) {
+//        GlobalApiResponse response = GlobalApiResponse.builder()
+//                .status(500)
+//                .message("예상치 못한 문제가 발생했습니다. 서버에 문의해주세요.")
+//                .build();
+//        return ResponseEntity.ok(response);
+//    }
 }
