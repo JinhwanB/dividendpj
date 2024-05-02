@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,17 @@ public class GlobalExceptionHandler {
         }
 
         return ResponseEntity.ok(list);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    private ResponseEntity<GlobalApiResponse> handleArgumentPathException(NoHandlerFoundException e) {
+        log.error("pathVariable 유효성 검사 실패");
+
+        GlobalApiResponse response = GlobalApiResponse.builder()
+                .status(404)
+                .message("입력하신 ticker가 빈 문자열입니다.")
+                .build();
+        return ResponseEntity.ok(response);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
