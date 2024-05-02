@@ -7,8 +7,6 @@ import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.service.CompanyService;
 import com.jh.dividendpj.config.GlobalApiResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -71,11 +69,17 @@ public class CompanyController {
     }
 
     // 회사 정보와 배당금 정보 조회 컨트롤러
-    @GetMapping("/finance/dividend/{companyName}")
-    public ResponseEntity<GlobalApiResponse> getCompanyWithDividend(@PathVariable @NotBlank(message = "회사 이름을 입력해주세요.") @Size(min = 1, message = "회사 이름은 최소 1글자 이상입니다.") String companyName) {
+    @GetMapping(value = {"/finance/dividend/", "/finance/dividend/{companyName}"})
+    public ResponseEntity<GlobalApiResponse> getCompanyWithDividend(@PathVariable Optional<String> companyName) {
         log.info("조회할 회사명={}", companyName);
 
-        Company companyInfo = companyService.getCompanyInfo(companyName);
+        String notEmptyCompanyName = companyName.orElseThrow(() -> new IllegalArgumentException("조회할 companyName을 입력해주세요."));
+
+        if (notEmptyCompanyName.startsWith(" ")) {
+            throw new IllegalArgumentException("companyName의 단어 시작에 공백이 포함되어 있습니다.");
+        }
+
+        Company companyInfo = companyService.getCompanyInfo(notEmptyCompanyName);
         List<CompanyWithDividendDto.Response> list = new ArrayList<>(List.of(companyInfo.toCompanyWithDividendDto()));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
     }
