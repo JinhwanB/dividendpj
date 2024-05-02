@@ -81,22 +81,12 @@ public class CompanyService {
     }
 
     /**
-     * 회사 조회
-     *
-     * @param companyName 회사 이름
-     * @return 조회된 회사
-     */
-    @Transactional(readOnly = true)
-    public Company getCompany(String companyName) {
-        return companyRepository.findByName(companyName).orElseThrow(() -> new CompanyException(CompanyErrorCode.NOT_FOUND_NAME, CompanyErrorCode.NOT_FOUND_NAME.getMessage()));
-    }
-
-    /**
      * 현재 관리하고있는 모든 회사 리스트를 페이징하여 조회
      *
      * @param pageable 페이징 처리
      * @return 페이징 처리된 모든 회사 리스트
      */
+    @Transactional(readOnly = true)
     public Page<Company> getAllCompany(Pageable pageable) {
         return companyRepository.findAll(pageable);
     }
