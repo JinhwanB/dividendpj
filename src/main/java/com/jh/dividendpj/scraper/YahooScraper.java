@@ -31,11 +31,13 @@ public class YahooScraper implements ScraperInterface {
             String url = String.format(COMPANY_URL, ticker, ticker);
             Connection connect = Jsoup.connect(url);
             Document document = connect.get();
-            Element titleEle = document.getElementsByClass("svelte-ufs8hf").get(0);
-            if (titleEle == null) {
+            Elements titleEle = document.getElementsByClass("svelte-ufs8hf");
+            if (titleEle.isEmpty()) {
+                log.error("회사 정보 스크랩 실패");
                 throw new ScraperException(ScraperErrorCode.NOT_FOUND_TICKER, ScraperErrorCode.NOT_FOUND_TICKER.getMessage());
             }
-            String title = titleEle.text().replaceAll("\\(.*\\)", "").trim();
+            Element element = titleEle.get(0);
+            String title = element.text().replaceAll("\\(.*\\)", "").trim();
 
             company = Company.builder()
                     .name(title)
