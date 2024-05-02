@@ -36,3 +36,7 @@ logging:
         type:
           descriptor:
             sql: trace
+
+scheduler:
+  scrap:
+    yahoo: "0/5 * * * * *"
