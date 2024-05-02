@@ -2,6 +2,7 @@ package com.jh.dividendpj.company.service;
 
 import com.jh.dividendpj.company.domain.Company;
 import com.jh.dividendpj.company.dto.CompanyDto;
+import com.jh.dividendpj.company.dto.CompanyWithDividendDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.exception.CompanyErrorCode;
 import com.jh.dividendpj.company.exception.CompanyException;
@@ -55,9 +56,9 @@ class CompanyServiceTest {
     @Test
     @DisplayName("회사 생성")
     void createCompany() {
-        Company company = companyService.createCompany(createRequest);
+        CreateCompanyDto.Response company = companyService.createCompany(createRequest);
 
-        assertThat(company.getName()).isEqualTo(companyName);
+        assertThat(company.getCompanyName()).isEqualTo(companyName);
     }
 
     @Test
@@ -106,9 +107,9 @@ class CompanyServiceTest {
     @DisplayName("회사 정보와 배당금 정보 조회")
     void getCompanyInfo() {
         companyService.createCompany(createRequest);
-        Company companyInfo = companyService.getCompanyInfo(companyName);
+        CompanyWithDividendDto.Response companyInfo = companyService.getCompanyInfo(companyName);
 
-        assertThat(companyInfo.getDevidendList()).isNotEmpty();
+        assertThat(companyInfo.getDividendDtoList()).isNotEmpty();
     }
 
     @Test
@@ -126,7 +127,7 @@ class CompanyServiceTest {
     @DisplayName("자동완성을 위한 기능")
     void autoComplete() {
         companyService.createCompany(createRequest);
-        List<Company> autoComplete = companyService.getAutoComplete(autoCompleteRequest);
+        List<CompanyDto.Response> autoComplete = companyService.getAutoComplete(autoCompleteRequest);
 
         assertThat(autoComplete).hasSize(1);
     }
@@ -135,7 +136,7 @@ class CompanyServiceTest {
     @DisplayName("현재 관리하고있는 모든 회사 리스트를 페이징하여 조회")
     void getAllCompany() {
         companyService.createCompany(createRequest);
-        Page<Company> allCompany = companyService.getAllCompany(pageable);
+        Page<CompanyDto.Response> allCompany = companyService.getAllCompany(pageable);
 
         assertThat(allCompany.getTotalElements()).isEqualTo(1);
         assertThat(allCompany.getTotalPages()).isEqualTo(1);
