@@ -30,6 +30,8 @@ public class MemberController {
     // 로그인을 위한 api
     @PostMapping("/signin")
     public ResponseEntity<?> signIn(@RequestBody Auth.SignIn request) {
-
+        Member authenticate = memberService.authenticate(request);
+        String token = tokenProvider.generateToken(authenticate.getUsername(), authenticate.getRoles());
+        return ResponseEntity.ok(token);
     }
 }
