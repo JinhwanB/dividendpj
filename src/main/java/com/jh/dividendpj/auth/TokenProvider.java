@@ -1,16 +1,15 @@
 package com.jh.dividendpj.auth;
 
 import com.jh.dividendpj.member.service.MemberService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
@@ -18,6 +17,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class TokenProvider {
     private static final String KEY_ROLES = "roles";
     private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60; // 1hour
@@ -43,6 +43,7 @@ public class TokenProvider {
 
         return Jwts.builder()
                 .setClaims(claims)
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                 .setIssuedAt(now) // 토큰 생성 시간
                 .setExpiration(expireDate) // 토큰 만료 시간
                 .signWith(SignatureAlgorithm.HS512, secret) // 사용할 암호화 알고리즘, 비밀키
@@ -50,6 +51,7 @@ public class TokenProvider {
     }
 
     // jwt를 사용하여 사용자의 인증 정보 가져오는 메소드
+    @Transactional
     public Authentication getAuthentication(String jwt) {
         UserDetails userDetails = memberService.loadUserByUsername(getUserName(jwt));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
@@ -73,6 +75,7 @@ public class TokenProvider {
         try {
             return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
         } catch (ExpiredJwtException e) {
+            log.error("토큰 정보 에러 = {}", e.getMessage());
             return e.getClaims();
         }
     }
