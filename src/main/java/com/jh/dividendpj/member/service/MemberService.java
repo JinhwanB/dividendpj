@@ -1,7 +1,7 @@
 package com.jh.dividendpj.member.service;
 
 import com.jh.dividendpj.member.domain.Member;
-import com.jh.dividendpj.member.dto.Auth;
+import com.jh.dividendpj.member.dto.MemberAuthDto;
 import com.jh.dividendpj.member.exception.MemberErrorCode;
 import com.jh.dividendpj.member.exception.MemberException;
 import com.jh.dividendpj.member.repository.MemberRepository;
@@ -30,20 +30,20 @@ public class MemberService implements UserDetailsService {
 
     // 회원가입
     // 비밀번호 암호화
-    public Member register(Auth.SignUp signUp) {
+    public Member register(MemberAuthDto.SignUp signUp) {
         boolean isExist = memberRepository.existsByUserName(signUp.getUserName());
         if (isExist) {
             throw new MemberException(MemberErrorCode.ALREADY_EXIST_USERNAME);
         }
 
-        Auth.SignUp encryptionPWD = signUp.toBuilder()
+        MemberAuthDto.SignUp encryptionPWD = signUp.toBuilder()
                 .password(passwordEncoder.encode(signUp.getPassword()))
                 .build();
         return memberRepository.save(encryptionPWD.toEntity());
     }
 
     // 회원 인증
-    public Member authenticate(Auth.SignIn signIn) {
+    public Member authenticate(MemberAuthDto.SignIn signIn) {
         Member member = memberRepository.findByUserName(signIn.getUserName())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_USERNAME));
         if (!passwordEncoder.matches(signIn.getPassword(), member.getPassword())) {
