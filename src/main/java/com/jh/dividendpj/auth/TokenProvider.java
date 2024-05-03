@@ -1,11 +1,15 @@
 package com.jh.dividendpj.auth;
 
+import com.jh.dividendpj.member.service.MemberService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -17,6 +21,8 @@ import java.util.List;
 public class TokenProvider {
     private static final String KEY_ROLES = "roles";
     private static final long TOKEN_EXPIRE_TIME = 1000 * 60 * 60; // 1hour
+
+    private final MemberService memberService;
 
     @Value("${spring.jwt.secret}")
     private String secret;
@@ -41,6 +47,12 @@ public class TokenProvider {
                 .setExpiration(expireDate) // 토큰 만료 시간
                 .signWith(SignatureAlgorithm.HS512, secret) // 사용할 암호화 알고리즘, 비밀키
                 .compact();
+    }
+
+    // jwt를 사용하여 사용자의 인증 정보 가져오는 메소드
+    public Authentication getAuthentication(String jwt) {
+        UserDetails userDetails = memberService.loadUserByUsername(getUserName(jwt));
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     // 유저 아이디 가져오기
