@@ -7,6 +7,7 @@ import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.exception.CompanyErrorCode;
 import com.jh.dividendpj.company.exception.CompanyException;
 import com.jh.dividendpj.company.repository.CompanyRepository;
+import com.jh.dividendpj.config.CacheKey;
 import com.jh.dividendpj.dividend.domain.Dividend;
 import com.jh.dividendpj.dividend.service.DividendService;
 import com.jh.dividendpj.scraper.YahooScraper;
@@ -63,7 +64,7 @@ public class CompanyService {
      * @param companyName 조회할 회사 이름
      * @return 조회된 회사 정보와 배당금 정보
      */
-    @Cacheable(key = "#companyName", value = "finance")
+    @Cacheable(key = "#companyName", value = CacheKey.KEY_FINANCE)
     public CompanyWithDividendDto.Response getCompanyInfo(String companyName) {
         log.info("redis에 데이터가 없어 스크랩하여 가져옵니다.");
         Company company = companyRepository.findByName(companyName).orElseThrow(() -> new CompanyException(CompanyErrorCode.NOT_FOUND_NAME, CompanyErrorCode.NOT_FOUND_NAME.getMessage()));
