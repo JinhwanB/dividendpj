@@ -32,6 +32,9 @@ public class CompanyController {
     public ResponseEntity<GlobalApiResponse> create(@Valid @RequestBody CreateCompanyDto.Request request) {
         log.info("입력받은 ticker={}", request.getTicker());
 
+        request = request.toBuilder()
+                .ticker(request.getTicker().trim())
+                .build();
         CreateCompanyDto.Response company = companyService.createCompany(request);
         List<CreateCompanyDto.Response> list = new ArrayList<>(List.of(company));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
@@ -42,12 +45,9 @@ public class CompanyController {
     public ResponseEntity<GlobalApiResponse> delete(@PathVariable Optional<String> ticker) {
         log.info("삭제할 ticker={}", ticker);
 
-        String notEmptyTicker = ticker.orElseThrow(() -> new IllegalArgumentException("삭제할 ticker를 입력해주세요."));
-
-        if (notEmptyTicker.startsWith(" ")) {
-            throw new IllegalArgumentException("ticker의 단어 시작에 공백이 포함되어 있습니다.");
-        }
-
+        String notEmptyTicker = ticker
+                .orElseThrow(() -> new IllegalArgumentException("삭제할 ticker를 입력해주세요."))
+                .trim();
         companyService.deleteCompany(notEmptyTicker);
         GlobalApiResponse response = GlobalApiResponse.builder()
                 .message("성공")
@@ -61,6 +61,9 @@ public class CompanyController {
     public ResponseEntity<GlobalApiResponse> autoComplete(@Valid @RequestBody CompanyDto.Request request) {
         log.info("검색한 단어={}", request.getPrefix());
 
+        request = request.toBuilder()
+                .prefix(request.getPrefix().trim())
+                .build();
         List<CompanyDto.Response> autoComplete = companyService.getAutoComplete(request);
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(autoComplete));
     }
@@ -70,11 +73,9 @@ public class CompanyController {
     public ResponseEntity<GlobalApiResponse> getCompanyWithDividend(@PathVariable Optional<String> companyName) {
         log.info("조회할 회사명={}", companyName);
 
-        String notEmptyCompanyName = companyName.orElseThrow(() -> new IllegalArgumentException("조회할 companyName을 입력해주세요."));
-
-        if (notEmptyCompanyName.startsWith(" ")) {
-            throw new IllegalArgumentException("companyName의 단어 시작에 공백이 포함되어 있습니다.");
-        }
+        String notEmptyCompanyName = companyName
+                .orElseThrow(() -> new IllegalArgumentException("조회할 companyName을 입력해주세요."))
+                .trim();
 
         CompanyWithDividendDto.Response companyInfo = companyService.getCompanyInfo(notEmptyCompanyName);
         List<CompanyWithDividendDto.Response> list = new ArrayList<>(List.of(companyInfo));
