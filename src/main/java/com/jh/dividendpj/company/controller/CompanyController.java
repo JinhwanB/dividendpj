@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ public class CompanyController {
 
     // 회사 생성
     @PostMapping("/company")
+    @PreAuthorize("hasRole('WRITE')")
     public ResponseEntity<GlobalApiResponse> create(@Valid @RequestBody CreateCompanyDto.Request request) {
         log.info("입력받은 ticker={}", request.getTicker());
 
@@ -84,6 +86,7 @@ public class CompanyController {
 
     // 현재 관리하고 있는 모든 회사 리스트 조회
     @GetMapping("/company")
+    @PreAuthorize("hasRole('READ')")
     public ResponseEntity<GlobalApiResponse> getAllCompany(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<CompanyDto.Response> allCompany = companyService.getAllCompany(pageable);
         List<Page<CompanyDto.Response>> list = new ArrayList<>(List.of(allCompany));
