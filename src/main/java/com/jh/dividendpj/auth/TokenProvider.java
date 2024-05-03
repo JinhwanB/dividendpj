@@ -1,11 +1,13 @@
 package com.jh.dividendpj.auth;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -41,7 +43,25 @@ public class TokenProvider {
                 .compact();
     }
 
+    // 유저 아이디 가져오기
+    public String getUserName(String token) {
+        return parseClaims(token).getSubject();
+    }
+
+    // 토큰 검증
+    public boolean validateToken(String token) {
+        if (!StringUtils.hasText(token)) return false;
+
+        Claims claims = parseClaims(token);
+        return !claims.getExpiration().before(new Date());
+    }
+
+    // 토큰 정보 가져오기
     private Claims parseClaims(String token) {
-        
+        try {
+            return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
     }
 }
