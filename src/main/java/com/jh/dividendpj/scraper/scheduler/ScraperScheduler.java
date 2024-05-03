@@ -2,6 +2,7 @@ package com.jh.dividendpj.scraper.scheduler;
 
 import com.jh.dividendpj.company.domain.Company;
 import com.jh.dividendpj.company.repository.CompanyRepository;
+import com.jh.dividendpj.config.CacheKey;
 import com.jh.dividendpj.dividend.domain.Dividend;
 import com.jh.dividendpj.dividend.repository.DividendRepository;
 import com.jh.dividendpj.scraper.YahooScraper;
@@ -23,7 +24,7 @@ public class ScraperScheduler {
     private final DividendRepository dividendRepository;
     private final YahooScraper yahooScraper;
 
-    @CacheEvict(value = "finance", allEntries = true)
+    @CacheEvict(value = CacheKey.KEY_FINANCE, allEntries = true)
     @Scheduled(cron = "${scheduler.scrap.yahoo}")
     public void yahooScraperSchedule() {
         log.info("스크래핑 스케줄 시작");
