@@ -24,14 +24,14 @@ public class MemberService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return memberRepository.findByUserName(username)
+        return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("등록된 회원이 아닙니다. -> " + username));
     }
 
     // 회원가입
     // 비밀번호 암호화
     public Member register(MemberAuthDto.SignUp signUp) {
-        boolean isExist = memberRepository.existsByUserName(signUp.getUserName());
+        boolean isExist = memberRepository.existsByUsername(signUp.getUsername());
         if (isExist) {
             throw new MemberException(MemberErrorCode.ALREADY_EXIST_USERNAME);
         }
@@ -44,7 +44,7 @@ public class MemberService implements UserDetailsService {
 
     // 회원 인증
     public Member authenticate(MemberAuthDto.SignIn signIn) {
-        Member member = memberRepository.findByUserName(signIn.getUserName())
+        Member member = memberRepository.findByUsername(signIn.getUsername())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND_USERNAME));
         if (!passwordEncoder.matches(signIn.getPassword(), member.getPassword())) {
             throw new MemberException(MemberErrorCode.NOT_MATCH_PASSWORD);
