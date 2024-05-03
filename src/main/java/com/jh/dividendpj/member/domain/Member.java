@@ -40,7 +40,7 @@ public class Member implements UserDetails {
 
     @Override
     public String getUsername() {
-        return "";
+        return userName;
     }
 
     @Override
