@@ -1,6 +1,7 @@
 package com.jh.dividendpj.member.controller;
 
 import com.jh.dividendpj.auth.TokenProvider;
+import com.jh.dividendpj.member.domain.Member;
 import com.jh.dividendpj.member.dto.Auth;
 import com.jh.dividendpj.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,8 @@ public class MemberController {
     // 회원가입을 위한 api
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody Auth.SignUp request) {
-
+        Member register = memberService.register(request);
+        return ResponseEntity.ok(register);
     }
 
     // 로그인을 위한 api
