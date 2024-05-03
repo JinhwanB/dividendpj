@@ -27,7 +27,8 @@ public class Member implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column
+    @ElementCollection
     private List<String> roles;
 
     @Override
