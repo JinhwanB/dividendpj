@@ -28,6 +28,7 @@ public class ScraperScheduler {
     @Scheduled(cron = "${scheduler.scrap.yahoo}")
     public void yahooScraperSchedule() {
         log.info("스크래핑 스케줄 시작");
+        // todo: 회사가 많아질 경우 시간이 굉장히 오래 걸릴 가능성 있음! spring batch에 대해 알아보기!
         List<Company> companyList = companyRepository.findAll();
         if (!companyList.isEmpty()) {
             for (Company company : companyList) {
