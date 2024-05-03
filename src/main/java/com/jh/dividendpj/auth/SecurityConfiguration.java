@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Slf4j
 @Configuration
@@ -26,21 +25,18 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**")
-                        .disable())
-//                .formLogin(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorizeRequest ->
-                {
-                    authorizeRequest
-                            .requestMatchers(
-                                    new AntPathRequestMatcher("/**/signin"),
-                                    new AntPathRequestMatcher("/**/signup"),
-                                    new AntPathRequestMatcher("/h2-console/**")
-                            ).permitAll();
-                })
+                        authorizeRequest
+                                .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/h2-console/**").permitAll()
+                                .requestMatchers("/error/**").permitAll()
+                                .anyRequest().authenticated()
+                )
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers(
                         headersConfigurer ->
