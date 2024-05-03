@@ -13,7 +13,7 @@ public class MemberAuthDto {
     @Builder(toBuilder = true)
     @ToString
     public static class SignIn {
-        private String userName;
+        private String username;
         private String password;
     }
 
@@ -24,13 +24,13 @@ public class MemberAuthDto {
     @Builder(toBuilder = true)
     @ToString
     public static class SignUp {
-        private String userName;
+        private String username;
         private String password;
         private List<String> roles;
 
         public Member toEntity() {
             return Member.builder()
-                    .userName(userName)
+                    .username(username)
                     .password(password)
                     .roles(roles)
                     .build();
