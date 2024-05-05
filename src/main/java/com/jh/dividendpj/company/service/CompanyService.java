@@ -53,10 +53,9 @@ public class CompanyService {
      *
      * @param ticker 삭제할 회사의 ticker
      */
-    public String deleteCompany(String ticker) {
+    public void deleteCompany(String ticker) {
         Company company = companyRepository.findByTicker(ticker).orElseThrow(() -> new CompanyException(CompanyErrorCode.NOT_FOUND_TICKER, CompanyErrorCode.NOT_FOUND_TICKER.getMessage()));
         companyRepository.delete(company);
-        return company.getName();
     }
 
     /**
