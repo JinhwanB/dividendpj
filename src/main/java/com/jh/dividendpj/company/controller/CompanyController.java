@@ -4,10 +4,13 @@ import com.jh.dividendpj.company.dto.CompanyDto;
 import com.jh.dividendpj.company.dto.CompanyWithDividendDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
 import com.jh.dividendpj.company.service.CompanyService;
+import com.jh.dividendpj.config.CacheKey;
 import com.jh.dividendpj.config.GlobalApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -27,6 +30,7 @@ import java.util.Optional;
 @Validated
 public class CompanyController {
     private final CompanyService companyService;
+    private final CacheManager redisCacheManager;
 
     // 회사 생성
     @PostMapping("/company")
@@ -50,7 +54,8 @@ public class CompanyController {
         String notEmptyTicker = ticker
                 .orElseThrow(() -> new IllegalArgumentException("삭제할 ticker를 입력해주세요."))
                 .trim();
-        companyService.deleteCompany(notEmptyTicker);
+        String companyName = companyService.deleteCompany(notEmptyTicker);
+        clearFinanceCache(companyName);
         GlobalApiResponse response = GlobalApiResponse.builder()
                 .message("성공")
                 .status(200)
@@ -91,5 +96,13 @@ public class CompanyController {
         Page<CompanyDto.Response> allCompany = companyService.getAllCompany(pageable);
         List<Page<CompanyDto.Response>> list = new ArrayList<>(List.of(allCompany));
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
+    }
+
+    // db에서 회사 삭제시 캐시에서도 삭제
+    private void clearFinanceCache(String companyName) {
+        Cache cache = redisCacheManager.getCache(CacheKey.KEY_FINANCE);
+        if (cache != null) {
+            cache.evict(companyName);
+        }
     }
 }
