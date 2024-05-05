@@ -78,6 +78,7 @@ public class CompanyController {
 
     // 회사 정보와 배당금 정보 조회 컨트롤러
     @GetMapping(value = {"/finance/dividend/", "/finance/dividend/{companyName}"})
+    @PreAuthorize("hasRole('READ')")
     public ResponseEntity<GlobalApiResponse> getCompanyWithDividend(@PathVariable Optional<String> companyName) {
         log.info("조회할 회사명={}", companyName);
 
