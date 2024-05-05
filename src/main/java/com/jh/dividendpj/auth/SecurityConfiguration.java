@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizeRequest ->
                         authorizeRequest
                                 .requestMatchers("/auth/**").permitAll()
+                                .requestMatchers("/company/autocomplete/**").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/error/**").permitAll()
                                 .anyRequest().authenticated()
