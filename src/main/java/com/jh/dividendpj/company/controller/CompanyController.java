@@ -48,6 +48,7 @@ public class CompanyController {
 
     // 회사 삭제
     @DeleteMapping(value = {"/company/", "/company/{ticker}"})
+    @PreAuthorize("hasRole('WRITE')")
     public ResponseEntity<GlobalApiResponse> delete(@PathVariable Optional<String> ticker) {
         log.info("삭제할 ticker={}", ticker);
 
@@ -102,6 +103,7 @@ public class CompanyController {
     private void clearFinanceCache(String companyName) {
         Cache cache = redisCacheManager.getCache(CacheKey.KEY_FINANCE);
         if (cache != null) {
+            log.info("캐시에도 데이터가 있어 삭제합니다.");
             cache.evict(companyName);
         }
     }
