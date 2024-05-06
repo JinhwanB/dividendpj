@@ -1,6 +1,7 @@
 package com.jh.dividendpj.member.controller;
 
 import com.jh.dividendpj.auth.TokenProvider;
+import com.jh.dividendpj.config.GlobalApiResponse;
 import com.jh.dividendpj.member.domain.Member;
 import com.jh.dividendpj.member.dto.MemberAuthDto;
 import com.jh.dividendpj.member.service.MemberService;
@@ -22,9 +23,10 @@ public class MemberController {
 
     // 회원가입을 위한 api
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody MemberAuthDto.SignUp request) {
-        Member register = memberService.register(request);
-        return ResponseEntity.ok(register);
+    public ResponseEntity<GlobalApiResponse<MemberAuthDto.Response>> signUp(@RequestBody MemberAuthDto.SignUp request) {
+        MemberAuthDto.Response register = memberService.register(request);
+        GlobalApiResponse<MemberAuthDto.Response> response = GlobalApiResponse.toGlobalApiResponse(register);
+        return ResponseEntity.ok(response);
     }
 
     // 로그인을 위한 api
