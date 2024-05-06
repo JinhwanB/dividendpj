@@ -1,26 +1,22 @@
-# Getting Started
+# 주식 배당금 정보를 제공하는 API 서비스 프로젝트
 
-### Reference Documentation
-For further reference, please consider the following sections:
+# 기술 스택
 
-* [Official Gradle documentation](https://docs.gradle.org)
-* [Spring Boot Gradle Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/3.2.5/gradle-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/3.2.5/gradle-plugin/reference/html/#build-image)
-* [Spring Web](https://docs.spring.io/spring-boot/docs/3.2.5/reference/htmlsingle/index.html#web)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/3.2.5/reference/htmlsingle/index.html#data.sql.jpa-and-spring-data)
-* [Spring Data Redis (Access+Driver)](https://docs.spring.io/spring-boot/docs/3.2.5/reference/htmlsingle/index.html#data.nosql.redis)
+- SpringBoot 3.2.5
+- Java 17
+- JPA
+- H2
+- Redis
+- Jsoup
+- Docker
 
-### Guides
-The following guides illustrate how to use some features concretely:
+# 목표
 
-* [Building a RESTful Web Service](https://spring.io/guides/gs/rest-service/)
-* [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
-* [Building REST services with Spring](https://spring.io/guides/tutorials/rest/)
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-* [Messaging with Redis](https://spring.io/guides/gs/messaging-redis/)
+- ✅ 웹 페이지를 분석하고 스크래핑 기법을 활용하여 필요한 데이터를
+  추출/저장 -> [코드로 이동](https://github.com/JinhwanB/dividendpj/blob/main/src/main/java/com/jh/dividendpj/scraper/YahooScraper.java)
+- ✅ 서비스에서 캐시의 필요성을 이해하고 캐시 서버를
+  구성 -> [redis설정](https://github.com/JinhwanB/dividendpj/blob/main/src/main/java/com/jh/dividendpj/config/CacheConfig.java), [redis 적용 코드1](https://github.com/JinhwanB/dividendpj/blob/e1e78f35adbf220800b1bc88d317ec6787ec6384/src/main/java/com/jh/dividendpj/company/service/CompanyService.java#L74), [redis 적용 코드2](https://github.com/JinhwanB/dividendpj/blob/e1e78f35adbf220800b1bc88d317ec6787ec6384/src/main/java/com/jh/dividendpj/company/controller/CompanyController.java#L62)
 
-### Additional Links
-These additional references should also help you:
+# ERD
 
-* [Gradle Build Scans – insights for your project's build](https://scans.gradle.com#gradle)
-
+<img src="https://github.com/JinhwanB/dividendpj/assets/123534245/5fe56f5c-942c-469f-82b9-88236183840e" width="200" height="400">
