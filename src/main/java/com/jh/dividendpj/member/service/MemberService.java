@@ -30,7 +30,7 @@ public class MemberService implements UserDetailsService {
 
     // 회원가입
     // 비밀번호 암호화
-    public Member register(MemberAuthDto.SignUp signUp) {
+    public MemberAuthDto.Response register(MemberAuthDto.SignUp signUp) {
         boolean isExist = memberRepository.existsByUsername(signUp.getUsername());
         if (isExist) {
             throw new MemberException(MemberErrorCode.ALREADY_EXIST_USERNAME);
@@ -39,7 +39,8 @@ public class MemberService implements UserDetailsService {
         MemberAuthDto.SignUp encryptionPWD = signUp.toBuilder()
                 .password(passwordEncoder.encode(signUp.getPassword()))
                 .build();
-        return memberRepository.save(encryptionPWD.toEntity());
+        Member save = memberRepository.save(encryptionPWD.toEntity());
+        return save.toResponse();
     }
 
     // 회원 인증
