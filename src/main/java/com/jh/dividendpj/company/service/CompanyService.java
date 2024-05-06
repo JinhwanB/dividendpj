@@ -44,7 +44,12 @@ public class CompanyService {
             throw new CompanyException(CompanyErrorCode.ALREADY_EXIST_COMPANY, CompanyErrorCode.ALREADY_EXIST_COMPANY.getMessage());
         }
         company = yahooScraper.getCompany(ticker);
-        Company save = companyRepository.save(company);
+
+        List<Dividend> dividendInfo = dividendService.getDividendInfo(company);
+        Company withDividend = company.toBuilder()
+                .devidendList(dividendInfo)
+                .build();
+        Company save = companyRepository.save(withDividend);
         return save.toCreateResponseDto();
     }
 
@@ -66,22 +71,13 @@ public class CompanyService {
      * @return 조회된 회사 정보와 배당금 정보
      */
     @Cacheable(key = "#companyName", value = CacheKey.KEY_FINANCE)
+    @Transactional(readOnly = true)
     public CompanyWithDividendDto.Response getCompanyInfo(String companyName) {
         log.info("redis에 데이터가 없어 스크랩하여 가져옵니다. company : {}", companyName);
 
-        Company company = companyRepository.findByName(companyName).orElseThrow(() -> new CompanyException(CompanyErrorCode.NOT_FOUND_NAME, CompanyErrorCode.NOT_FOUND_NAME.getMessage()));
-        if (company.getDevidendList() != null && !company.getDevidendList().isEmpty()) {
-            log.info("회사의 배당금 정보가 저장되어있어 스크랩하지 않습니다. company : {}", company.getName());
-            return company.toCompanyWithDividendDto();
-        }
-
-        log.info("회사의 배당금 정보가 없어 스크랩을 진행합니다. company : {}", company.getName());
-        List<Dividend> dividendInfo = dividendService.getDividendInfo(company);
-        Company withDividend = company.toBuilder()
-                .devidendList(dividendInfo)
-                .build();
-        Company save = companyRepository.save(withDividend);
-        return save.toCompanyWithDividendDto();
+        Company company = companyRepository.findByName(companyName)
+                .orElseThrow(() -> new CompanyException(CompanyErrorCode.NOT_FOUND_NAME, CompanyErrorCode.NOT_FOUND_NAME.getMessage()));
+        return company.toCompanyWithDividendDto();
     }
 
     /**
