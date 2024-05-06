@@ -27,13 +27,7 @@ public class TokenProvider {
     @Value("${spring.jwt.secret}")
     private String secret;
 
-    /**
-     * 토큰 생성(발급)
-     *
-     * @param userName
-     * @param roles
-     * @return
-     */
+    // 토큰 생성 발급
     public String generateToken(String userName, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userName);
         claims.put(KEY_ROLES, roles);
