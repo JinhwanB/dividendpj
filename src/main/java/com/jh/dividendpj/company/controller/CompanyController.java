@@ -21,7 +21,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,21 +35,20 @@ public class CompanyController {
     // 회사 생성
     @PostMapping("/company")
     @PreAuthorize("hasRole('WRITE')")
-    public ResponseEntity<GlobalApiResponse> create(@Valid @RequestBody CreateCompanyDto.Request request) {
+    public ResponseEntity<GlobalApiResponse<CreateCompanyDto.Response>> create(@Valid @RequestBody CreateCompanyDto.Request request) {
         log.info("입력받은 ticker={}", request.getTicker());
 
         request = request.toBuilder()
                 .ticker(request.getTicker().trim())
                 .build();
         CreateCompanyDto.Response company = companyService.createCompany(request);
-        List<CreateCompanyDto.Response> list = new ArrayList<>(List.of(company));
-        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
+        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(company));
     }
 
     // 회사 삭제
     @DeleteMapping(value = {"/company/", "/company/{ticker}"})
     @PreAuthorize("hasRole('WRITE')")
-    public ResponseEntity<GlobalApiResponse> delete(@PathVariable Optional<String> ticker) {
+    public ResponseEntity<GlobalApiResponse<?>> delete(@PathVariable Optional<String> ticker) {
         log.info("삭제할 ticker={}", ticker);
 
         String notEmptyTicker = ticker
@@ -58,7 +56,7 @@ public class CompanyController {
                 .trim();
         String companyName = companyService.deleteCompany(notEmptyTicker);
         clearFinanceCache(companyName);
-        GlobalApiResponse response = GlobalApiResponse.builder()
+        GlobalApiResponse<?> response = GlobalApiResponse.builder()
                 .message("성공")
                 .status(200)
                 .build();
@@ -67,7 +65,7 @@ public class CompanyController {
 
     // 자동완성 기능을 위한 API
     @GetMapping("/company/autocomplete")
-    public ResponseEntity<GlobalApiResponse> autoComplete(@Valid @RequestBody CompanyDto.Request request) {
+    public ResponseEntity<GlobalApiResponse<List<CompanyDto.Response>>> autoComplete(@Valid @RequestBody CompanyDto.Request request) {
         log.info("검색한 단어={}", request.getPrefix());
 
         request = request.toBuilder()
@@ -80,7 +78,7 @@ public class CompanyController {
     // 회사 정보와 배당금 정보 조회 컨트롤러
     @GetMapping(value = {"/finance/dividend/", "/finance/dividend/{companyName}"})
     @PreAuthorize("hasRole('READ')")
-    public ResponseEntity<GlobalApiResponse> getCompanyWithDividend(@PathVariable Optional<String> companyName) {
+    public ResponseEntity<GlobalApiResponse<CompanyWithDividendDto.Response>> getCompanyWithDividend(@PathVariable Optional<String> companyName) {
         log.info("조회할 회사명={}", companyName);
 
         String notEmptyCompanyName = companyName
@@ -88,17 +86,15 @@ public class CompanyController {
                 .trim();
 
         CompanyWithDividendDto.Response companyInfo = companyService.getCompanyInfo(notEmptyCompanyName);
-        List<CompanyWithDividendDto.Response> list = new ArrayList<>(List.of(companyInfo));
-        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
+        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(companyInfo));
     }
 
     // 현재 관리하고 있는 모든 회사 리스트 조회
     @GetMapping("/company")
     @PreAuthorize("hasRole('READ')")
-    public ResponseEntity<GlobalApiResponse> getAllCompany(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<GlobalApiResponse<Page<CompanyDto.Response>>> getAllCompany(@PageableDefault(size = 10, sort = "name", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<CompanyDto.Response> allCompany = companyService.getAllCompany(pageable);
-        List<Page<CompanyDto.Response>> list = new ArrayList<>(List.of(allCompany));
-        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(list));
+        return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(allCompany));
     }
 
     // db에서 회사 삭제시 캐시에서도 삭제
