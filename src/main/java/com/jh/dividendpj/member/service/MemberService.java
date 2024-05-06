@@ -25,7 +25,7 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("등록된 회원이 아닙니다. -> " + username));
+                .orElseThrow(() -> new UsernameNotFoundException(MemberErrorCode.NOT_FOUND_USERNAME.getMessage() + " -> " + username));
     }
 
     // 회원가입
