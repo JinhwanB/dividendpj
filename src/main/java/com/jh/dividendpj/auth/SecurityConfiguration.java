@@ -38,6 +38,8 @@ public class SecurityConfiguration {
                                 .requestMatchers("/error/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers(
                         headersConfigurer ->
