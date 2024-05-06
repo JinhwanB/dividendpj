@@ -1,5 +1,6 @@
 package com.jh.dividendpj.member.domain;
 
+import com.jh.dividendpj.member.dto.MemberAuthDto;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -63,5 +64,12 @@ public class Member implements UserDetails {
     @Override
     public boolean isEnabled() {
         return false;
+    }
+
+    // Member -> MemberAuthDto.Response
+    public MemberAuthDto.Response toResponse() {
+        return MemberAuthDto.Response.builder()
+                .username(username)
+                .build();
     }
 }
