@@ -95,7 +95,6 @@ class CompanyServiceTest {
     @Test
     @DisplayName("회사 삭제 실패")
     void failDeleteCompany() {
-        companyService.createCompany(createRequest);
         try {
             companyService.deleteCompany("test");
         } catch (CompanyException e) {
