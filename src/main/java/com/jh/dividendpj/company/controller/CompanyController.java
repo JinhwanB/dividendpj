@@ -54,6 +54,10 @@ public class CompanyController {
         String notEmptyTicker = ticker
                 .orElseThrow(() -> new IllegalArgumentException(CompanyErrorCode.EMPTY_TICKER.getMessage()))
                 .trim();
+        if (notEmptyTicker.isEmpty()) {
+            throw new IllegalArgumentException(CompanyErrorCode.EMPTY_TICKER.getMessage());
+        }
+
         String companyName = companyService.deleteCompany(notEmptyTicker);
         clearFinanceCache(companyName);
         GlobalApiResponse<?> response = GlobalApiResponse.builder()
@@ -84,6 +88,9 @@ public class CompanyController {
         String notEmptyCompanyName = companyName
                 .orElseThrow(() -> new IllegalArgumentException(CompanyErrorCode.EMPTY_COMPANY_NAME.getMessage()))
                 .trim();
+        if (notEmptyCompanyName.isEmpty()) {
+            throw new IllegalArgumentException(CompanyErrorCode.EMPTY_COMPANY_NAME.getMessage());
+        }
 
         CompanyWithDividendDto.Response companyInfo = companyService.getCompanyInfo(notEmptyCompanyName);
         return ResponseEntity.ok(GlobalApiResponse.toGlobalApiResponse(companyInfo));
