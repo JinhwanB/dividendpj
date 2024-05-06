@@ -31,9 +31,10 @@ public class MemberController {
 
     // 로그인을 위한 api
     @PostMapping("/signin")
-    public ResponseEntity<?> signIn(@RequestBody MemberAuthDto.SignIn request) {
+    public ResponseEntity<GlobalApiResponse<String>> signIn(@RequestBody MemberAuthDto.SignIn request) {
         Member authenticate = memberService.authenticate(request);
         String token = tokenProvider.generateToken(authenticate.getUsername(), authenticate.getRoles());
-        return ResponseEntity.ok(token);
+        GlobalApiResponse<String> response = GlobalApiResponse.toGlobalApiResponse(token);
+        return ResponseEntity.ok(response);
     }
 }
