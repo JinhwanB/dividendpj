@@ -44,6 +44,7 @@ public class CompanyService {
             throw new CompanyException(CompanyErrorCode.ALREADY_EXIST_COMPANY, CompanyErrorCode.ALREADY_EXIST_COMPANY.getMessage());
         }
         company = yahooScraper.getCompany(ticker);
+        companyRepository.save(company);
 
         List<Dividend> dividendInfo = dividendService.getDividendInfo(company);
         Company withDividend = company.toBuilder()
