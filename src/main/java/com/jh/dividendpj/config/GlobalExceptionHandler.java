@@ -1,6 +1,7 @@
 package com.jh.dividendpj.config;
 
 import com.jh.dividendpj.company.exception.CompanyException;
+import com.jh.dividendpj.member.exception.MemberException;
 import com.jh.dividendpj.scraper.exception.ScraperException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,14 +35,14 @@ public class GlobalExceptionHandler {
 //    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    private ResponseEntity<List<GlobalApiResponse>> handleValidException(MethodArgumentNotValidException e) {
+    private ResponseEntity<List<GlobalApiResponse<?>>> handleValidException(MethodArgumentNotValidException e) {
         log.error("request 유효성 검사 실패");
 
-        List<GlobalApiResponse> list = new ArrayList<>();
+        List<GlobalApiResponse<?>> list = new ArrayList<>();
         BindingResult bindingResult = e.getBindingResult();
         List<FieldError> fieldError = bindingResult.getFieldErrors();
         for (FieldError error : fieldError) {
-            GlobalApiResponse response = GlobalApiResponse.builder()
+            GlobalApiResponse<?> response = GlobalApiResponse.builder()
                     .status(400)
                     .message(error.getDefaultMessage())
                     .build();
@@ -52,10 +53,10 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    private ResponseEntity<GlobalApiResponse> handleArgumentException(IllegalArgumentException e) {
+    private ResponseEntity<GlobalApiResponse<?>> handleArgumentException(IllegalArgumentException e) {
         log.error("pathVariable 유효성 검사 실패");
 
-        GlobalApiResponse response = GlobalApiResponse.builder()
+        GlobalApiResponse<?> response = GlobalApiResponse.builder()
                 .message(e.getMessage())
                 .status(400)
                 .build();
@@ -63,9 +64,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CompanyException.class)
-    private ResponseEntity<GlobalApiResponse> handleCompanyException(CompanyException e) {
+    private ResponseEntity<GlobalApiResponse<?>> handleCompanyException(CompanyException e) {
         log.error(e.getMessage());
-        GlobalApiResponse response = GlobalApiResponse.builder()
+        GlobalApiResponse<?> response = GlobalApiResponse.builder()
                 .status(e.getCompanyErrorCode().getStatus())
                 .message(e.getCompanyErrorCode().getMessage())
                 .build();
@@ -73,13 +74,24 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ScraperException.class)
-    private ResponseEntity<GlobalApiResponse> handleScraperException(ScraperException e) {
+    private ResponseEntity<GlobalApiResponse<?>> handleScraperException(ScraperException e) {
         log.error(e.getMessage());
-        GlobalApiResponse response = GlobalApiResponse.builder()
+        GlobalApiResponse<?> response = GlobalApiResponse.builder()
                 .status(e.getScraperErrorCode().getStatus())
                 .message(e.getScraperErrorCode().getMessage())
                 .build();
         return new ResponseEntity<>(response, HttpStatus.resolve(e.getScraperErrorCode().getStatus()));
+    }
+
+    @ExceptionHandler(MemberException.class)
+    private ResponseEntity<GlobalApiResponse<?>> handleMemberException(MemberException e) {
+        log.error(e.getMessage());
+
+        GlobalApiResponse<?> response = GlobalApiResponse.builder()
+                .status(e.getMemberErrorCode().getStatus())
+                .message(e.getMemberErrorCode().getMessage())
+                .build();
+        return new ResponseEntity<>(response, HttpStatus.resolve(e.getMemberErrorCode().getStatus()));
     }
 
 //    @ExceptionHandler(Exception.class)
