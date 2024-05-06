@@ -3,6 +3,7 @@ package com.jh.dividendpj.company.controller;
 import com.jh.dividendpj.company.dto.CompanyDto;
 import com.jh.dividendpj.company.dto.CompanyWithDividendDto;
 import com.jh.dividendpj.company.dto.CreateCompanyDto;
+import com.jh.dividendpj.company.exception.CompanyErrorCode;
 import com.jh.dividendpj.company.service.CompanyService;
 import com.jh.dividendpj.config.CacheKey;
 import com.jh.dividendpj.config.GlobalApiResponse;
@@ -53,7 +54,7 @@ public class CompanyController {
         log.info("삭제할 ticker={}", ticker);
 
         String notEmptyTicker = ticker
-                .orElseThrow(() -> new IllegalArgumentException("삭제할 ticker를 입력해주세요."))
+                .orElseThrow(() -> new IllegalArgumentException(CompanyErrorCode.EMPTY_TICKER.getMessage()))
                 .trim();
         String companyName = companyService.deleteCompany(notEmptyTicker);
         clearFinanceCache(companyName);
@@ -83,7 +84,7 @@ public class CompanyController {
         log.info("조회할 회사명={}", companyName);
 
         String notEmptyCompanyName = companyName
-                .orElseThrow(() -> new IllegalArgumentException("조회할 companyName을 입력해주세요."))
+                .orElseThrow(() -> new IllegalArgumentException(CompanyErrorCode.EMPTY_COMPANY_NAME.getMessage()))
                 .trim();
 
         CompanyWithDividendDto.Response companyInfo = companyService.getCompanyInfo(notEmptyCompanyName);
