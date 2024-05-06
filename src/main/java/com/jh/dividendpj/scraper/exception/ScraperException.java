@@ -9,6 +9,7 @@ public class ScraperException extends RuntimeException {
 
     public ScraperException(ScraperErrorCode scraperErrorCode, String message) {
         super(message);
+        this.message = message;
         this.scraperErrorCode = scraperErrorCode;
     }
 }
