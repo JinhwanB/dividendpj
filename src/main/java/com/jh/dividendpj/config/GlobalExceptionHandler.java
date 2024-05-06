@@ -2,9 +2,8 @@ package com.jh.dividendpj.config;
 
 import com.jh.dividendpj.company.exception.CompanyException;
 import com.jh.dividendpj.scraper.exception.ScraperException;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -18,21 +17,21 @@ import java.util.List;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    @ExceptionHandler(ConstraintViolationException.class)
-    private ResponseEntity<List<GlobalApiResponse>> handleValidatedException(ConstraintViolationException e) {
-        log.error("파라미터 또는 PathVariable 유효성 검사 실패");
-
-        List<GlobalApiResponse> list = new ArrayList<>();
-        for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
-            GlobalApiResponse res = GlobalApiResponse.builder()
-                    .status(400)
-                    .message(constraintViolation.getMessage())
-                    .build();
-            list.add(res);
-        }
-
-        return ResponseEntity.ok(list);
-    }
+//    @ExceptionHandler(ConstraintViolationException.class)
+//    private ResponseEntity<List<GlobalApiResponse>> handleValidatedException(ConstraintViolationException e) {
+//        log.error("파라미터 또는 PathVariable 유효성 검사 실패");
+//
+//        List<GlobalApiResponse> list = new ArrayList<>();
+//        for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
+//            GlobalApiResponse res = GlobalApiResponse.builder()
+//                    .status(400)
+//                    .message(constraintViolation.getMessage())
+//                    .build();
+//            list.add(res);
+//        }
+//
+//        return new ResponseEntity<>(list, HttpStatus.resolve(400));
+//    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<List<GlobalApiResponse>> handleValidException(MethodArgumentNotValidException e) {
@@ -49,7 +48,7 @@ public class GlobalExceptionHandler {
             list.add(response);
         }
 
-        return ResponseEntity.ok(list);
+        return new ResponseEntity<>(list, HttpStatus.resolve(e.getStatusCode().value()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -60,25 +59,27 @@ public class GlobalExceptionHandler {
                 .message(e.getMessage())
                 .status(400)
                 .build();
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.resolve(400));
     }
 
     @ExceptionHandler(CompanyException.class)
     private ResponseEntity<GlobalApiResponse> handleCompanyException(CompanyException e) {
+        log.error(e.getMessage());
         GlobalApiResponse response = GlobalApiResponse.builder()
                 .status(e.getCompanyErrorCode().getStatus())
                 .message(e.getCompanyErrorCode().getMessage())
                 .build();
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.resolve(e.getCompanyErrorCode().getStatus()));
     }
 
     @ExceptionHandler(ScraperException.class)
     private ResponseEntity<GlobalApiResponse> handleScraperException(ScraperException e) {
+        log.error(e.getMessage());
         GlobalApiResponse response = GlobalApiResponse.builder()
                 .status(e.getScraperErrorCode().getStatus())
                 .message(e.getScraperErrorCode().getMessage())
                 .build();
-        return ResponseEntity.ok(response);
+        return new ResponseEntity<>(response, HttpStatus.resolve(e.getScraperErrorCode().getStatus()));
     }
 
 //    @ExceptionHandler(Exception.class)
