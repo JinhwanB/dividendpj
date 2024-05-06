@@ -2,25 +2,23 @@ package com.jh.dividendpj.config;
 
 import lombok.*;
 
-import java.util.List;
-
 @Getter
 @Setter // 테스트용
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(toBuilder = true)
 @ToString
-public class GlobalApiResponse {
+public class GlobalApiResponse<T> {
     private int status;
     private String message;
-    private List<?> result;
+    private T result;
 
     // api 응답 성공 시 apiResponse로 반환 메소드
-    public static GlobalApiResponse toGlobalApiResponse(List<?> dtoList) {
-        return GlobalApiResponse.builder()
+    public static <T> GlobalApiResponse<T> toGlobalApiResponse(T data) {
+        return GlobalApiResponse.<T>builder()
                 .message("성공")
                 .status(200)
-                .result(dtoList)
+                .result(data)
                 .build();
     }
 }
