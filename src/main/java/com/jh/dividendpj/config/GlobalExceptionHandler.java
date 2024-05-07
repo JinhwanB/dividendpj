@@ -94,12 +94,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.resolve(e.getMemberErrorCode().getStatus()));
     }
 
-//    @ExceptionHandler(Exception.class)
-//    private ResponseEntity<GlobalApiResponse> handleNotExpectedException(Exception e) {
-//        GlobalApiResponse response = GlobalApiResponse.builder()
-//                .status(500)
-//                .message("예상치 못한 문제가 발생했습니다. 서버에 문의해주세요.")
-//                .build();
-//        return ResponseEntity.ok(response);
-//    }
+    // 예상하지 않은 에러에 대한 처리
+    @ExceptionHandler(Exception.class)
+    private ResponseEntity<GlobalApiResponse<?>> handleNotExpectedException(Exception e) {
+        GlobalApiResponse<?> response = GlobalApiResponse.builder()
+                .status(500)
+                .message("예상치 못한 문제가 발생했습니다. 서버에 문의해주세요.")
+                .build();
+        return ResponseEntity.ok(response);
+    }
 }
