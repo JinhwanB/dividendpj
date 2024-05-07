@@ -18,22 +18,7 @@ import java.util.List;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-//    @ExceptionHandler(ConstraintViolationException.class)
-//    private ResponseEntity<List<GlobalApiResponse>> handleValidatedException(ConstraintViolationException e) {
-//        log.error("파라미터 또는 PathVariable 유효성 검사 실패");
-//
-//        List<GlobalApiResponse> list = new ArrayList<>();
-//        for (ConstraintViolation<?> constraintViolation : e.getConstraintViolations()) {
-//            GlobalApiResponse res = GlobalApiResponse.builder()
-//                    .status(400)
-//                    .message(constraintViolation.getMessage())
-//                    .build();
-//            list.add(res);
-//        }
-//
-//        return new ResponseEntity<>(list, HttpStatus.resolve(400));
-//    }
-
+    
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<List<GlobalApiResponse<?>>> handleValidException(MethodArgumentNotValidException e) {
         log.error("request 유효성 검사 실패");
