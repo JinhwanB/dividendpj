@@ -30,6 +30,45 @@
   <img src="https://github.com/JinhwanB/dividendpj/assets/123534245/5fe56f5c-942c-469f-82b9-88236183840e" width="40%" height="0%">
 </p>
 
+## 파일 구조
+
+```angular2html
+├─build
+├─gradle
+└─src
+    ├─main
+    │  ├─java
+    │  │  └─com
+    │  │      └─jh
+    │  │          └─dividendpj
+    │  │              ├─auth
+    │  │              ├─company
+    │  │              │  ├─controller
+    │  │              │  ├─domain
+    │  │              │  ├─dto
+    │  │              │  ├─exception
+    │  │              │  ├─repository
+    │  │              │  └─service
+    │  │              ├─config
+    │  │              ├─dividend
+    │  │              │  ├─domain
+    │  │              │  ├─dto
+    │  │              │  ├─repository
+    │  │              │  └─service
+    │  │              ├─member
+    │  │              │  ├─controller
+    │  │              │  ├─domain
+    │  │              │  ├─dto
+    │  │              │  ├─exception
+    │  │              │  ├─repository
+    │  │              │  └─service
+    │  │              └─scraper
+    │  │                  ├─exception
+    │  │                  └─scheduler
+    │  └─resources 
+    └─test
+```
+
 ## 최종 구현 API
 
 1. GET -
