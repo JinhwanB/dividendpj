@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableScheduling
 @EnableCaching
-@EnableBatchProcessing
 public class DividendpjApplication {
 
     public static void main(String[] args) {
