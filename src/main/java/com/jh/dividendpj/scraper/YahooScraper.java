@@ -22,7 +22,7 @@ import java.util.List;
 public class YahooScraper implements ScraperInterface<Company, Dividend> {
     private static final String DIVIDEND_URL = "https://finance.yahoo.com/quote/%s/history?period1=%d&period2=%d&frequency=1mo";
     private static final String COMPANY_URL = "https://finance.yahoo.com/quote/%s/p=%s";
-    private static final long START_TIME = 86400;
+    private static final long START_TIME = 86400; // 하루 (60 * 60 * 24)
 
     @Override
     public Company getCompany(String ticker) {
@@ -54,7 +54,7 @@ public class YahooScraper implements ScraperInterface<Company, Dividend> {
     public List<Dividend> getDividendList(Company company) {
         List<Dividend> list = new ArrayList<>();
         try {
-            long end = System.currentTimeMillis() / 1000;
+            long end = System.currentTimeMillis() / 1000; // 현재 시간을 밀리초로 가져와 초로 변경
             String url = String.format(DIVIDEND_URL, company.getTicker(), START_TIME, end);
             Connection connect = Jsoup.connect(url);
             Document document = connect.get();
