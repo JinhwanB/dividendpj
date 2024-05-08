@@ -44,7 +44,7 @@ public class ScraperScheduler {
                         });
 
                 try {
-                    Thread.sleep(3000);
+                    Thread.sleep(3000); // 연속적으로 스크래핑 대상 사이트 서버에 요청을 날리지 않도록 일시정지
                 } catch (InterruptedException e) {
                     log.error("스크래핑 스케줄 스레드 에러 = {}", e.getMessage());
                     Thread.currentThread().interrupt();
