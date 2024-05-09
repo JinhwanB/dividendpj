@@ -31,10 +31,7 @@ public class YahooScraper implements ScraperInterface<Company, Dividend> {
             String url = String.format(COMPANY_URL, ticker, ticker);
             Connection connect = Jsoup.connect(url);
             Document document = connect.get();
-            log.info("찾은 document = {}", document);
             Elements titleEle = document.getElementsByTag("h1");
-            log.info("ticker = {}", ticker);
-            log.info("찾은 elements = {}", titleEle);
             if (titleEle.isEmpty()) {
                 log.error("회사 정보 스크랩 실패");
                 throw new ScraperException(ScraperErrorCode.NOT_FOUND_TICKER, ScraperErrorCode.NOT_FOUND_TICKER.getMessage());
