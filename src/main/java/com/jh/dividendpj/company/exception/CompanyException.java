@@ -9,6 +9,7 @@ public class CompanyException extends RuntimeException {
 
     public CompanyException(CompanyErrorCode companyErrorCode, String message) {
         super(message);
+        this.message = message;
         this.companyErrorCode = companyErrorCode;
     }
 }
