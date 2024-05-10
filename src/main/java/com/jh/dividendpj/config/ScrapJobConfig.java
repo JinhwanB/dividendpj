@@ -11,14 +11,16 @@ import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.*;
+import org.springframework.batch.core.configuration.annotation.JobScope;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
+import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +54,7 @@ public class ScrapJobConfig {
     }
 
     @Bean
+    @JobScope
     public Step scrapStep(JobRepository jobRepository, PlatformTransactionManager transactionManager){
         return new StepBuilder(stepName, jobRepository)
                 .<Company, Company>chunk(10, transactionManager)
@@ -86,14 +89,18 @@ public class ScrapJobConfig {
     }
 
     @Bean
-    public ItemReader<Company> scrapItemReader(){
-        JpaPagingItemReader<Company> reader = new JpaPagingItemReader<>();
-        reader.setEntityManagerFactory(entityManagerFactory);
-        reader.setQueryString("SELECT c FROM Company c");
-        return reader;
+    @StepScope
+    public JpaPagingItemReader<Company> scrapItemReader(){
+        return new JpaPagingItemReaderBuilder<Company>()
+                .pageSize(10)
+                .queryString("SELECT c FROM Company c ORDER BY id ASC")
+                .entityManagerFactory(entityManagerFactory)
+                .name("JpaPagingItemReader")
+                .build();
     }
 
     @Bean
+    @StepScope
     public ItemProcessor<Company, Company> scrapItemProcessor(){
         return company -> {
             try{
@@ -124,6 +131,7 @@ public class ScrapJobConfig {
     }
 
     @Bean
+    @StepScope
     public ItemWriter<Company> scrapItemWriter(){
         return items -> {
             log.info("batch 작업 실행 중 Writer : company 엔티티 저장 실행");
