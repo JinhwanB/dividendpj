@@ -33,6 +33,12 @@ spring:
       settings:
         web-allow-others: true
 
+  batch:
+    job:
+      enabled: false
+    jdbc:
+      initialize-schema: always
+
   jwt:
     secret: amgtc3ByaW5nLWJvb3QtZGl2aWRlbmQtcHJvamVjdC10dXRvcmlhbC1qd3Qtc2VjcmV0LWtleQo
 
@@ -48,3 +54,8 @@ logging:
 scheduler:
   scrap:
     yahoo: "0 0 0 * * *"
+
+job:
+  scrap:
+    job-name: "scrapJob"
+    step-name: "scrapStep"
