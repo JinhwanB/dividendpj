@@ -1,6 +1,5 @@
 package com.jh.dividendpj.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +16,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 import java.time.Duration;
 
 @Configuration
-@RequiredArgsConstructor
 public class CacheConfig {
     @Value("${spring.data.redis.host}")
     private String host;
