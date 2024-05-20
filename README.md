@@ -1,6 +1,14 @@
 # 주식 배당금 정보를 제공하는 API 서비스 프로젝트
 
-## 기술 스택
+[야후 파이낸스](https://finance.yahoo.com)에 있는 회사의 배당금 정보를 스크랩하여 회사와 배당금 정보를 데이터베이스에 저장하고 조회 및 삭제 기능을 제공하는 API 프로젝트
+
+[블로그](https://velog.io/@yjj7819/%EC%A3%BC%EC%8B%9D-%EB%B0%B0%EB%8B%B9%EA%B8%88-%EC%A0%95%EB%B3%B4%EB%A5%BC-%EC%A0%9C%EA%B3%B5%ED%95%98%EB%8A%94-API-%EC%84%9C%EB%B9%84%EC%8A%A4-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8)
+
+# 프로젝트 기간
+
+2024.05.01 ~ 2024.05.13
+
+# 기술 스택
 
 - SpringBoot 3.2.5
 - Java 17
@@ -10,7 +18,7 @@
 - Jsoup
 - Docker
 
-## 목표
+# 목표
 
 - ✅ 웹 페이지를 분석하고 스크래핑 기법을 활용하여 필요한 데이터를
   추출/저장 -> [코드로 이동](https://github.com/JinhwanB/dividendpj/blob/main/src/main/java/com/jh/dividendpj/scraper/YahooScraper.java)
@@ -24,13 +32,13 @@
 - ✅ ControllerAdvice 에서 에러
   처리하기 -> [exceptionHandler](https://github.com/JinhwanB/dividendpj/blob/main/src/main/java/com/jh/dividendpj/config/GlobalExceptionHandler.java)
 
-## ERD
+# ERD
 
 <p align="center">
   <img src="https://github.com/JinhwanB/dividendpj/assets/123534245/5fe56f5c-942c-469f-82b9-88236183840e" width="40%" height="0%">
 </p>
 
-## 파일 구조
+# 파일 구조
 
 ```angular2html
 ├─build
@@ -69,7 +77,7 @@
     └─test
 ```
 
-## 최종 구현 API
+# 최종 구현 API
 
 1. GET -
    finance/dividend/{companyName} -> [service](https://github.com/JinhwanB/dividendpj/blob/697009aa24d4e9a1b75befe2a6fec38ec560f4e1/src/main/java/com/jh/dividendpj/company/service/CompanyService.java#L76), [controller](https://github.com/JinhwanB/dividendpj/blob/697009aa24d4e9a1b75befe2a6fec38ec560f4e1/src/main/java/com/jh/dividendpj/company/controller/CompanyController.java#L85)
