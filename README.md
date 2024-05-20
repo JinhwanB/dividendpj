@@ -34,9 +34,8 @@
 
 # ERD
 
-<p align="center">
-  <img src="https://github.com/JinhwanB/dividendpj/assets/123534245/5fe56f5c-942c-469f-82b9-88236183840e" width="40%" height="0%">
-</p>
+![image](https://github.com/JinhwanB/dividendpj/assets/123534245/14cc2f00-693f-44b2-bd92-fc94430583b4)
+
 
 # 파일 구조
 
